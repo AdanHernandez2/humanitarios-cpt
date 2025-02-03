@@ -55,3 +55,19 @@
 .wr-dashboard-sidebar-balance {
   display: none !important;
 }
+
+/* Notificacion envio formulario */
+.frm-message {
+  display: none;
+  padding: 10px 15px;
+  color: white;
+  background-color: grey;
+}
+
+.frm-message.success {
+  background-color: green;
+}
+
+.frm-message.error {
+  background-color: orangered;
+}

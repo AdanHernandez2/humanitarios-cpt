@@ -25,3 +25,5 @@ function render_edit_post_form() {
   return ob_get_clean();
 }
 add_shortcode('edit_post_form', 'render_edit_post_form');
+
+

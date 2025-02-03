@@ -71,6 +71,8 @@ if (!is_user_logged_in()) {
     <input type="hidden" name="humanitarios_nonce" value="<?php echo wp_create_nonce('submit_pet_form'); ?>">
     
     <button type="submit">Enviar Reporte</button>
+
+    <p class="frm-message"></p>
 </form>
 
 <script>
@@ -78,18 +80,32 @@ jQuery(document).ready(function($) {
     $('#report-pet-form').submit(function(e) {
         e.preventDefault();
 
-        var formData = new FormData(this); // Permite subir imágenes
+        var formData = new FormData(this);
+        $('.frm-message').show().removeClass(['error', 'success']).text('Enviando...');
+        $('#submit').prop('disabled', true);
+
         $.ajax({
             url: '<?php echo admin_url('admin-ajax.php'); ?>',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
+            beforeSend: function() {
+                $('.frm-message').text('Enviando...');
+            },
             success: function(response) {
-                alert(response.message);
-                if (response.success) {
+                const noticeClass = response.status === 1 ? 'success' : 'error';
+                $('.frm-message').removeClass(['error', 'success']).addClass(noticeClass).text(response.message);
+
+                if (response.status === 1) {
                     $('#report-pet-form')[0].reset();
                 }
+            },
+            error: function() {
+                $('.frm-message').addClass('error').text('Error al enviar el formulario.');
+            },
+            complete: function() {
+                $('#submit').prop('disabled', false);
             }
         });
     });

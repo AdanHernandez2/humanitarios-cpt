@@ -14,6 +14,7 @@ defined('ABSPATH') || exit;
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-types.php';
 require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
 require_once plugin_dir_path(__FILE__) . 'includes/form-handler.php';
+require_once plugin_dir_path(__FILE__) . 'includes/admin-meta-boxes.php';
 require_once plugin_dir_path(__FILE__) . 'includes/filters.php';
 require_once plugin_dir_path(__FILE__) . 'includes/email-notifications.php';
 
