@@ -1,0 +1,57 @@
+.registration-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.registration-form-container .form-group {
+  margin-bottom: 15px;
+}
+
+.registration-form-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.registration-form-container input[type="text"],
+.registration-form-container input[type="email"],
+.registration-form-container input[type="password"],
+.registration-form-container input[type="checkbox"],
+.registration-form-container input[type="radio"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.registration-form-container .btn {
+  background-color: #ff6b6b;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.registration-form-container .login-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.wr-saveditems,
+.wr-earnings,
+.wr-earnings,
+.wr-invoices,
+.wr-disputes,
+.wr-projectlistings,
+.wr-myorders {
+  display: none !important;
+}
+.wr-dashboard-sidebar-balance {
+  display: none !important;
+}
