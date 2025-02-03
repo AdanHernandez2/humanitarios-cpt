@@ -6,42 +6,45 @@ Humanitarios CPT es un plugin de WordPress diseñado para reportar personas y ma
 
 humanitarios-cpt/
 ├── humanitarios-cpt.php              → Archivo principal del plugin
+
 ├── includes/                         → Lógica funcional
 │   ├── custom-post-types.php         → Registro de CPTs
 │   ├── form-handler.php              → Procesamiento de formularios
 │   ├── email-notifications.php       → Envío de correos
 │   ├── shortcodes.php                → Shortcodes
 │   ├── filters.php                   → Filtros y hooks
-│
+
 ├── templates/                        → Plantillas visuales
-│   └── emails/                   ← Nueva carpeta para emails
-│       ├── email-header.php      ← Cabecera reutilizable
-│       ├── email-footer.php      ← Pie de email
-│       ├── nuevo-registro.php    ← Email de bienvenida
-│       ├── post-pendiente.php    ← Notificación de publicación en revisión
-│       ├── post-aprobado.php     ← Aviso de publicación aprobada
-│       └── actualizacion-post.php← Notificación de actualización
+│   └── emails/                       → Nueva carpeta para emails
+│       ├── email-header.php          → Cabecera reutilizable
+│       ├── email-footer.php          → Pie de email
+│       ├── nuevo-registro.php        → Email de bienvenida
+│       ├── post-pendiente.php        → Notificación de publicación en revisión
+│       ├── post-aprobado.php         → Aviso de publicación aprobada
+│       └── actualizacion-post.php    → Notificación de actualización
 │   ├── single/                       → Vistas individuales (perfiles)
-│   │   ├── single-personas_perdidas.php
-│   │   └── single-mascotas_perdidas.php
+│       ├── single-personas_perdidas.php
+│       └── single-mascotas_perdidas.php
 │   ├── archive/                      → Listados generales
-│   │   ├── archive-personas_perdidas.php
-│   │   └── archive-mascotas_perdidas.php
+│       ├── archive-personas_perdidas.php
+│       └── archive-mascotas_perdidas.php
 │   └── parts/                        → Componentes reutilizables
 │       ├── cards/                    → Diseño de tarjetas
-│       │   ├── card-persona.php
-│       │   └── card-mascota.php
+│           ├── card-persona.php
+│           └── card-mascota.php
 │       ├── filters/                  → Formularios de filtrado
-│       │   └── filter-form.php
+│           └── filter-form.php
 │       └── forms/                    → Formularios de creación/edición
 │           ├── edit-post-form.php
 │           ├── post-creation-person-form.php
 │           └── post-creation-pets-form.php
+
 ├── assets/                           → Recursos estáticos
 │   ├── css/
-│   │   └── frontend.css             → Estilos para cards/filtros/formularios
+│       └── frontend.css              → Estilos para cards/filtros/formularios
 │   └── js/
-│       └── frontend.js              → Scripts para interacciones
+│       └── frontend.js               → Scripts para interacciones
+
 
 
 ## Instalación
