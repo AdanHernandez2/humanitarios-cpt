@@ -36,7 +36,6 @@ function humanitarios_meta_box_callback($post) {
           'calle' => 'Calle'
       ],
       'mascotas_perdidas' => [
-          'nombre_mascota' => 'Nombre',
           'tipo_animal' => 'Tipo de Animal',
           'raza' => 'Raza',
           'color' => 'Color',

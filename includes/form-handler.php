@@ -183,41 +183,43 @@ function handle_pet_form_submission() {
     }
 }
 
-// Handler para edición de posts
-add_action('wp_ajax_edit_post_form', 'handle_edit_post_form');
-function handle_edit_post_form() {
+// Edición de reportes de personas desaparecidas
+add_action('wp_ajax_edit_person_form', 'handle_edit_person_form');
+
+function handle_edit_person_form() {
     try {
+        if (!is_user_logged_in()) {
+            throw new Exception('Debes iniciar sesión para realizar esta acción.');
+        }
+
         global $current_user;
-        
-        // Verificar nonce
-        if (!wp_verify_nonce($_POST['humanitarios_nonce'], 'edit_post_' . $_POST['post_id'])) {
-            throw new Exception('Nonce de seguridad inválido');
-        }
-
         $post_id = intval($_POST['post_id']);
-        $post_type = sanitize_text_field($_POST['post_type']);
-        
-        // Verificar autoría
-        if (get_post_field('post_author', $post_id) != $current_user->ID) {
-            throw new Exception('No tienes permisos para editar este reporte');
+
+        // Verificar nonce de seguridad
+        if (!isset($_POST['humanitarios_nonce']) || !wp_verify_nonce($_POST['humanitarios_nonce'], 'edit_person_' . $post_id)) {
+            throw new Exception('Nonce de seguridad inválido.');
         }
 
-        // Actualizar datos básicos del post
+        // Obtener el post
+        $post = get_post($post_id);
+        if (!$post || $post->post_author != $current_user->ID) {
+            throw new Exception('No tienes permisos para editar este reporte.');
+        }
+
+        // Actualizar el título del post con el nombre de la persona
+        $nombre_completo = sanitize_text_field($_POST['nombre_completo'] ?? 'Anónimo');
         $post_data = [
-            'ID' => $post_id,
-            'post_title' => $post_type === 'personas_perdidas' 
-                ? sanitize_text_field($_POST['nombre_completo'] ?? 'Anónimo')
-                : sanitize_text_field($_POST['nombre_mascota'] ?? 'Mascota sin nombre'),
+            'ID'         => $post_id,
+            'post_title' => $nombre_completo,
             'post_status' => 'pending' // Volver a revisión tras edición
         ];
-        
         wp_update_post($post_data);
 
-        // Manejar imágenes
-        $image_key = ($post_type === 'personas_perdidas') ? 'foto_persona' : 'foto_mascota';
-        
-        // Eliminar imagen si se seleccionó
-        if (isset($_POST["remove_$image_key"])) {
+        // Manejo de imagen de la persona desaparecida
+        $image_key = 'foto_persona';
+
+        // Eliminar imagen si el usuario lo solicitó
+        if (isset($_POST['remove_foto_persona'])) {
             $old_attach_id = get_post_meta($post_id, $image_key, true);
             if ($old_attach_id) {
                 wp_delete_attachment($old_attach_id, true);
@@ -225,7 +227,7 @@ function handle_edit_post_form() {
             }
         }
 
-        // Subir nueva imagen
+        // Subir nueva imagen si se proporciona
         if (!empty($_FILES[$image_key]['tmp_name'])) {
             $attach_id = humanitarios_handle_file_upload($image_key, $post_id);
             if ($attach_id) {
@@ -233,44 +235,139 @@ function handle_edit_post_form() {
             }
         }
 
-        // Actualizar metadatos
+        // Lista de metadatos a actualizar
         $meta_fields = [
-            // Campos comunes
-            'fecha_desaparicion' => 'sanitize_text_field',
-            'ubicacion' => 'sanitize_text_field',
-            'telefono' => 'sanitize_text_field',
-            
-            // Campos específicos
-            ($post_type === 'personas_perdidas') ? [
-                'edad' => 'absint',
-                'genero' => 'sanitize_text_field',
-                'color_piel' => 'sanitize_text_field',
-                // ... otros campos de persona
-            ] : [
-                'tipo_animal' => 'sanitize_text_field',
-                'raza' => 'sanitize_text_field',
-                'tamanio' => 'sanitize_text_field',
-                // ... otros campos de mascota
-            ]
+            'edad'                => 'absint',
+            'nacionalidad'        => 'sanitize_text_field',
+            'genero'              => 'sanitize_text_field',
+            'color_piel'          => 'sanitize_text_field',
+            'cabello'             => 'sanitize_text_field',
+            'altura'              => 'sanitize_text_field',
+            'fecha_desaparicion'  => 'sanitize_text_field',
+            'ubicacion'           => 'sanitize_text_field',
+            'hora_desaparicion'   => 'sanitize_text_field',
+            'vestimenta'          => 'sanitize_text_field',
+            'enfermedades'        => 'sanitize_text_field',
+            'telefono'            => 'sanitize_text_field',
+            'correo'              => 'sanitize_email',
+            'ubicacion_contacto'  => 'sanitize_text_field',
+            'calle'               => 'sanitize_text_field'
         ];
 
+        // Guardar los metadatos
         foreach ($meta_fields as $key => $sanitizer) {
             if (isset($_POST[$key])) {
-                $value = call_user_func($sanitizer, $_POST[$key]);
-                update_post_meta($post_id, $key, $value);
+                update_post_meta($post_id, $key, call_user_func($sanitizer, $_POST[$key]));
             }
         }
 
-        // Notificar actualización
-        do_action('humanitarios_post_updated', $post_id);
+        // Acción para otros hooks
+        do_action('humanitarios_person_updated', $post_id);
 
-        wp_send_json_success([
-            'message' => 'Reporte actualizado correctamente',
-            'redirect' => get_permalink($post_id)
+        // Responder con éxito y redirigir al reporte editado
+        wp_send_json([
+            'status'  => 1,
+            'message' => 'Actualizacion de reporte enviado para revisión'
         ]);
 
     } catch (Exception $e) {
-        wp_send_json_error($e->getMessage());
+        wp_send_json([
+            'status'  => 0,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
+
+// Edición de reportes de mascotas desaparecidas
+add_action('wp_ajax_edit_pet_form', 'handle_edit_pet_form');
+
+function handle_edit_pet_form() {
+    try {
+        if (!is_user_logged_in()) {
+            throw new Exception('Debes iniciar sesión para realizar esta acción.');
+        }
+
+        global $current_user;
+        $post_id = intval($_POST['post_id']);
+
+        // Verificar nonce de seguridad
+        if (!isset($_POST['humanitarios_nonce']) || !wp_verify_nonce($_POST['humanitarios_nonce'], 'edit_pet_' . $post_id)) {
+            throw new Exception('Nonce de seguridad inválido.');
+        }
+
+        // Obtener el post
+        $post = get_post($post_id);
+        if (!$post || $post->post_author != $current_user->ID) {
+            throw new Exception('No tienes permisos para editar este reporte.');
+        }
+
+        // Actualizar el título del post con el nombre de la mascota (o mantener el actual si está vacío)
+        $nombre_mascota = sanitize_text_field($_POST['nombre_mascota'] ?? '');
+        $post_data = [
+            'ID'         => $post_id,
+            'post_title' => !empty($nombre_mascota) ? $nombre_mascota : $post->post_title,
+            'post_status' => 'pending' // Volver a revisión tras edición
+        ];
+        wp_update_post($post_data);
+
+        // Manejo de imagen de la mascota desaparecida
+        $image_key = 'foto_mascota';
+
+        // Eliminar imagen si el usuario lo solicitó
+        if (isset($_POST['remove_foto_mascota'])) {
+            $old_attach_id = get_post_meta($post_id, $image_key, true);
+            if ($old_attach_id) {
+                wp_delete_attachment($old_attach_id, true);
+                delete_post_meta($post_id, $image_key);
+            }
+        }
+
+        // Subir nueva imagen si se proporciona
+        if (!empty($_FILES[$image_key]['tmp_name'])) {
+            $attach_id = humanitarios_handle_file_upload($image_key, $post_id);
+            if ($attach_id) {
+                update_post_meta($post_id, $image_key, $attach_id);
+            }
+        }
+
+        // Lista de metadatos a actualizar
+        $meta_fields = [
+            'tipo_animal'         => 'sanitize_text_field',
+            'raza'                => 'sanitize_text_field',
+            'color'               => 'sanitize_text_field',
+            'tamanio'             => 'sanitize_text_field',
+            'edad'                => 'sanitize_text_field',
+            'sexo'                => 'sanitize_text_field',
+            'identificacion'      => 'sanitize_text_field',
+            'fecha_desaparicion'  => 'sanitize_text_field',
+            'ubicacion'           => 'sanitize_text_field',
+            'hora_desaparicion'   => 'sanitize_text_field',
+            'recompensa'          => 'sanitize_text_field',
+            'telefono'            => 'sanitize_text_field',
+            'correo'              => 'sanitize_email'
+        ];
+
+        // Guardar los metadatos
+        foreach ($meta_fields as $key => $sanitizer) {
+            if (isset($_POST[$key])) {
+                update_post_meta($post_id, $key, call_user_func($sanitizer, $_POST[$key]));
+            }
+        }
+
+        // Acción para otros hooks
+        do_action('humanitarios_pet_updated', $post_id);
+
+        // Responder con éxito y redirigir al reporte editado
+        wp_send_json([
+            'status'  => 1,
+            'message' => 'Actualización de reporte enviada para revisión'
+        ]);
+
+    } catch (Exception $e) {
+        wp_send_json([
+            'status'  => 0,
+            'message' => $e->getMessage()
+        ]);
     }
 }
 

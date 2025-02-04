@@ -71,3 +71,154 @@
 .frm-message.error {
   background-color: orangered;
 }
+
+/** Single **/
+.reporte-container {
+  padding: 30px 40px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 650px;
+  margin: 50px auto;
+  background-color: #ffff;
+}
+.inf-basica {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.reporte-container header h1 {
+  font: 500 28px / 40px Montserrat, sans-serif;
+}
+.reporte-container h2 {
+  font: 500 20px / 24px Montserrat, sans-serif;
+}
+.reporte-container ul li {
+  font: 500 16px / 24px Montserrat, sans-serif;
+}
+.foto-persona img {
+  border-radius: 15px;
+  height: 250px;
+  width: 100%;
+  max-width: 300px;
+}
+@media (max-width: 500px) {
+  .inf-basica {
+    flex-wrap: wrap-reverse;
+  }
+}
+
+/* Contenedor grid */
+.humanitarios-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 20px 0;
+  justify-items: center;
+  align-items: start;
+}
+
+/* Cards */
+.humanitarios-posts-grid .card {
+  width: 100%;
+  max-width: 350px; /* Máximo ancho de cada card */
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .humanitarios-posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .humanitarios-posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .humanitarios-posts-grid .card {
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 480px) {
+  .humanitarios-posts-grid .card {
+    max-width: 100%;
+  }
+}
+/** cards **/
+.card.card-personas,
+.card.card-mascotas {
+  width: 100%;
+  max-width: 350px;
+  height: 100%;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 15px;
+}
+.img-cards {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.content-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  gap: 20px;
+}
+.card-title {
+  font: 500 20px / 24px Montserrat, sans-serif;
+}
+.card-subtitle {
+  font: 700 12px / 17px Poppins, sans-serif;
+  color: #ce1126;
+  background-color: rgba(255, 88, 81, 0.1);
+  padding: 5px 10px;
+  align-items: center;
+  border-radius: 8px;
+}
+.card-details {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  gap: 20px;
+}
+.card-details p {
+  display: inherit;
+  justify-content: space-between;
+  color: #afaeae;
+  font: 500 14px / 20px Poppins, sans-serif;
+  font-weight: 600;
+  gap: 20px;
+}
+.card-details p strong {
+  color: #3b3b3b;
+  font: 500 14px / 20px Poppins, sans-serif;
+}
+.card-button {
+  padding: 0 15px;
+  margin: 20px 0;
+}
+.card-button a {
+  display: flex;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 12px 38px;
+  position: relative;
+  align-items: center;
+  background: #f7f7f8;
+  justify-content: center;
+  text-decoration: none;
+  color: #1e1e1e;
+  border-radius: 10px;
+  font: 500 16px / 24px Montserrat, sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+.card:hover .card-button a {
+  color: #fff;
+  background: #ce1126;
+}
