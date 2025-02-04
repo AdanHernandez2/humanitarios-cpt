@@ -9,7 +9,7 @@
 
 // Seguridad: Bloquear acceso directo
 defined('ABSPATH') || exit;
-
+define('HUMANITARIOS_CPT_PATH', plugin_dir_path(__FILE__));
 // Incluir archivos necesarios
 require_once plugin_dir_path(__FILE__) . 'includes/custom-post-types.php';
 require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';

@@ -168,7 +168,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
-  gap: 20px;
+  margin: 20px 0px 10px 0px;
 }
 .card-title {
   font: 500 20px / 24px Montserrat, sans-serif;
@@ -185,7 +185,6 @@
   display: flex;
   flex-direction: column;
   padding: 0 15px;
-  gap: 20px;
 }
 .card-details p {
   display: inherit;
@@ -193,7 +192,8 @@
   color: #afaeae;
   font: 500 14px / 20px Poppins, sans-serif;
   font-weight: 600;
-  gap: 20px;
+  margin: 0;
+  margin-bottom: 10px;
 }
 .card-details p strong {
   color: #3b3b3b;
@@ -221,4 +221,52 @@
 .card:hover .card-button a {
   color: #fff;
   background: #ce1126;
+}
+
+/**
+*  Archive
+*/
+/* Archive Container */
+.humanitarios-archive-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.archive-title {
+  text-align: center;
+  font: 700 32px/1.2 "Montserrat", sans-serif;
+  color: #ce1126;
+  margin-bottom: 40px;
+}
+
+/* Paginación */
+.humanitarios-pagination {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.humanitarios-pagination .page-numbers {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 0 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.humanitarios-pagination .current,
+.humanitarios-pagination a:hover {
+  background: #ce1126;
+  color: white;
+  border-color: #ce1126;
+}
+
+/* No results */
+.no-results {
+  text-align: center;
+  padding: 50px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  font-size: 18px;
 }
