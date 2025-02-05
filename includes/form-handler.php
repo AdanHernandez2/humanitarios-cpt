@@ -1,7 +1,9 @@
 <?php
 // form-handler.php
 
-// Función para manejar la subida de imágenes
+/**
+ *  Función para manejar la subida de imágenes
+ */
 function humanitarios_handle_file_upload($file_key, $post_id) {
     if (!function_exists('wp_handle_upload')) {
         require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -34,7 +36,9 @@ function humanitarios_handle_file_upload($file_key, $post_id) {
     return false;
 }
 
-// Handler para formulario de personas
+/**
+ *  Handler para formulario de personas
+ */
 add_action('wp_ajax_submit_person_form', 'handle_person_form_submission');
 function handle_person_form_submission() {
     try {
@@ -95,7 +99,8 @@ function handle_person_form_submission() {
         }
 
         // Enviar notificaciones
-        do_action('humanitarios_new_submission', $post_id);
+        do_action('humanitarios_send_new_submission_admin_email', $post_id); //para el admin
+        do_action('humanitarios_send_post_pending_email', $post_id); // para el autor del reporte
 
         wp_send_json([
             'status' => 1,
@@ -110,7 +115,9 @@ function handle_person_form_submission() {
     }
 }
 
-// Handler para formulario de mascotas (similar al de personas)
+/**
+ *  Handler para formulario de mascotas (similar al de personas)
+ */
 add_action('wp_ajax_submit_pet_form', 'handle_pet_form_submission');
 function handle_pet_form_submission() {
     try {
@@ -168,7 +175,8 @@ function handle_pet_form_submission() {
         }
 
         // Enviar notificaciones
-        do_action('humanitarios_new_submission', $post_id);
+        do_action('humanitarios_send_new_submission_admin_email', $post_id); // para el admin
+        do_action('humanitarios_send_post_pending_email', $post_id); //para el autor del reporte
 
         wp_send_json([
             'status'  => 1,
@@ -183,7 +191,9 @@ function handle_pet_form_submission() {
     }
 }
 
-// Edición de reportes de personas desaparecidas
+/**
+ *  Edición de reportes de personas desaparecidas
+ */
 add_action('wp_ajax_edit_person_form', 'handle_edit_person_form');
 
 function handle_edit_person_form() {
@@ -262,7 +272,7 @@ function handle_edit_person_form() {
         }
 
         // Acción para otros hooks
-        do_action('humanitarios_person_updated', $post_id);
+        do_action('humanitarios_send_update_post_admin_email', $post_id); //para el admin
 
         // Responder con éxito y redirigir al reporte editado
         wp_send_json([
@@ -355,7 +365,7 @@ function handle_edit_pet_form() {
         }
 
         // Acción para otros hooks
-        do_action('humanitarios_pet_updated', $post_id);
+        do_action('humanitarios_send_update_post_admin_email', $post_id); //para el admin
 
         // Responder con éxito y redirigir al reporte editado
         wp_send_json([

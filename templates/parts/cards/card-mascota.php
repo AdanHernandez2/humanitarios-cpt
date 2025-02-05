@@ -20,13 +20,13 @@ $especie = get_post_meta(get_the_ID(), 'raza', true);
             'alt' => esc_attr(get_the_title())
         )); ?>
     <?php else : ?>
-        <img class="img-cards" src="https://humanitarios.do/wp-content/uploads/2025/02/desaparecidosimg.jpg" alt="Imagen predeterminada">
+        <img class="img-cards" src="https://humanitarios.do/wp-content/uploads/2025/02/mascotaperdida.jpg" alt="Imagen predeterminada">
     <?php endif; ?>
     
     <div class="card-content">
         <div class="content-title">
             <h2 class="card-title"><?php the_title(); ?></h2>
-            <p class="card-subtitle"><?php echo $especie ? esc_html($especie) : 'Mascota Desaparecida'; ?></p>
+            <p class="card-subtitle"><?php echo 'Mascota Desaparecida'; ?></p>
         </div>
         
         <div class="card-details">

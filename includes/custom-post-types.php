@@ -54,8 +54,12 @@ function humanitarios_register_cpts() {
 
     // Registrar estado inicial para nuevos posts
     add_filter('wp_insert_post_data', 'humanitarios_default_post_status', 10, 2);
+
+    // Acción para manejar el cambio de estado
+    add_action('transition_post_status', 'humanitarios_notify_post_status_change', 10, 3);
 }
 add_action('init', 'humanitarios_register_cpts');
+
 
 function humanitarios_default_post_status($data, $postarr) {
     if (
@@ -96,5 +100,62 @@ function humanitarios_status_meta_box_callback($post) {
         );
     }
     echo '</select>';
+}
+
+/**
+ * Enviar correo al autor cuando un post cambie de pendiente a publicado
+ */
+function humanitarios_notify_post_status_change($post_id) {
+    $post = get_post($post_id);
+    if (!$post) {
+        return;
+    }
+
+    // Obtener el autor
+    $author = get_user_by('id', $post->post_author);
+    if (!$author || empty($author->user_email)) {
+        error_log('❌ Error: No se encontró el correo del autor.');
+        return;
+    }
+
+    $subject = '';
+    $message = '';
+
+    // Verificar el estado del post y definir el asunto y mensaje
+    if ($post->post_status === 'pending') {
+        // El post está pendiente
+        $subject = 'Tu publicación está pendiente de aprobación';
+        
+        // Cargar plantilla para post pendiente
+        ob_start();
+        include plugin_dir_path(__FILE__) . '../templates/emails/post-pendiente.php';
+        $message = ob_get_clean();
+
+    } elseif ($post->post_status === 'publish') {
+        // El post fue aprobado (cambio a 'publish')
+        $subject = 'Tu publicación ha sido aprobada';
+        
+        // Cargar plantilla para post aprobado
+        ob_start();
+        include plugin_dir_path(__FILE__) . '../templates/emails/post-aprobado.php';
+        $message = ob_get_clean();
+    }
+
+    // Si el mensaje ha sido definido, enviamos el correo
+    if (!empty($message)) {
+        // Enviar email al autor
+        $sent = wp_mail(
+            $author->user_email,
+            $subject,
+            $message,
+            ['Content-Type: text/html; charset=UTF-8']
+        );
+
+        if ($sent) {
+            error_log('✅ Correo enviado al autor: ' . $author->user_email);
+        } else {
+            error_log('❌ Error: No se pudo enviar el correo al autor.');
+        }
+    }
 }
 

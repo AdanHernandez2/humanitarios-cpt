@@ -77,5 +77,6 @@ function humanitarios_custom_templates($template) {
     return $template;
 }
 
+
 // Shortcode de ejemplo
 add_shortcode('formulario_registro', 'humanitarios_registration_form_shortcode');

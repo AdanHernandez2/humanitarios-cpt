@@ -2,7 +2,7 @@
 get_header();
 while (have_posts()) : the_post();
     $meta = get_post_meta(get_the_ID());
-    $foto_mascota = get_the_post_thumbnail_url(get_the_ID(), 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/desaparecidosimg.jpg';
+    $foto_mascota = get_the_post_thumbnail_url(get_the_ID(), 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/mascotaperdida.jpg';
 ?>
     <div class="reporte-container">
         <header>

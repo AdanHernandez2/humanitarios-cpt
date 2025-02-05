@@ -84,4 +84,16 @@ function humanitarios_combined_posts_shortcode($atts) {
 }
 add_shortcode('mostrar_publicaciones', 'humanitarios_combined_posts_shortcode');
 
+/**
+ *  Filtro de busqueda
+ */
 
+ add_shortcode('filtro_publicaciones', 'humanitarios_filtro_shortcode');
+ function humanitarios_filtro_shortcode() {
+     ob_start();
+     
+     // Incluir formulario con el JS integrado
+     include plugin_dir_path(__FILE__) . '../templates/parts/filters/filter-form.php';
+     
+     return ob_get_clean();
+ }
