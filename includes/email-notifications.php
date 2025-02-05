@@ -139,3 +139,51 @@ function humanitarios_send_update_post_email($post_id) {
     }
 }
 add_action('humanitarios_post_updated', 'humanitarios_send_update_post_email');
+
+/**
+ * Enviar correo cuando un post pasa de "pending" a "publish"
+ */
+function humanitarios_send_post_approved_email($new_status, $old_status, $post) {
+    // Validar que el post pertenece a nuestros CPTs
+    if (!in_array($post->post_type, ['personas_perdidas', 'mascotas_perdidas'])) {
+        return;
+    }
+
+    // Verificar que el estado anterior era "pending" y ahora es "publish"
+    if ($old_status !== 'pending' || $new_status !== 'publish') {
+        return;
+    }
+
+    // Obtener información del autor
+    $author = get_user_by('id', $post->post_author);
+    if (!$author || empty($author->user_email)) {
+        error_log('❌ Error: No se encontró el correo del autor.');
+        return;
+    }
+
+    // Definir variables para la plantilla
+    $post_title = get_the_title($post->ID);
+    $post_url = get_permalink($post->ID);
+
+    // Cargar la plantilla de correo
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/emails/post-aprobado.php';
+    $message = ob_get_clean();
+
+    // Enviar correo
+    $sent = wp_mail(
+        $author->user_email,
+        'Tu publicación ha sido aprobada',
+        $message,
+        ['Content-Type: text/html; charset=UTF-8']
+    );
+
+    if ($sent) {
+        error_log('✅ Correo de aprobación enviado a ' . $author->user_email);
+    } else {
+        error_log('❌ Error al enviar el correo de aprobación.');
+    }
+}
+
+// Hook corregido con 3 parámetros
+add_action('transition_post_status', 'humanitarios_send_post_approved_email', 10, 3);

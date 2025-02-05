@@ -1,5 +1,7 @@
 <?php
-// nuevo-registro.php
+/**
+ *  nuevo-registro.php
+ */
 ?>
 <?php include 'email-header.php'; ?>
 <table>
@@ -16,14 +18,23 @@
         <td><strong>ID del Reporte:</strong> <?php echo esc_html($post_id); ?></td>
     </tr>
     <tr>
-        <td><strong>Autor:</strong> <?php echo esc_html($author_name); ?></td>
+        <td><strong>Autor:</strong> <?php echo esc_html($post_author); ?></td>
     </tr>
     <tr>
         <td><strong>Datos Registrados:</strong></td>
     </tr>
     <?php foreach ($meta_data as $key => $value) : ?>
         <tr>
-            <td><strong><?php echo esc_html($key); ?>:</strong> <?php echo esc_html($value); ?></td>
+            <td>
+                <strong><?php echo esc_html($key); ?>:</strong> 
+                <?php 
+                    if (is_array($value)) {
+                        echo esc_html(implode(', ', $value)); // Convertir arrays a cadena separada por comas
+                    } else {
+                        echo esc_html($value);
+                    }
+                ?>
+            </td>
         </tr>
     <?php endforeach; ?>
 </table>
