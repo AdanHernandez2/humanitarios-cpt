@@ -18,7 +18,7 @@ if (!$post || $post->post_author != get_current_user_id() || $post->post_type !=
 
 // Obtener metadatos existentes
 $meta = get_post_meta($post_id);
-$foto_mascota = get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/desaparecidosimg.jpg';
+$foto_mascota = get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/mascotaperdida.jpg';
 ?>
 
 <div class="edit-reporte-container">
@@ -32,34 +32,43 @@ $foto_mascota = get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humani
         <!-- Información Básica -->
         <fieldset>
             <legend>Información Básica</legend>
-            <input type="text" name="nombre_mascota" value="<?php echo esc_attr($meta['nombre_mascota'][0] ?? ''); ?>" placeholder="Nombre de la mascota (opcional)">
+            <label for="nombre_mascota">Nombre de la mascota</label>
+            <input type="text" name="nombre_mascota" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Nombre de la mascota (opcional)">
             <label>Foto Actual:</label>
             <div class="current-image">
-                <img src="<?php echo esc_url(get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/desaparecidosimg.jpg'); ?>" height="100">
+                <img src="<?php echo esc_url(get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humanitarios.do/wp-content/uploads/2025/02/mascotaperdida.jpg'); ?>" height="100">
                 <label><input type="checkbox" name="remove_foto_mascota"> Eliminar foto</label>
             </div>
+            <label for="foto_mascota">Subir foto nueva</label>
             <input type="file" name="foto_mascota">
+            <label for="tipo_animal">Tipo de animal</label>
             <select name="tipo_animal">
                 <option value="Perro" <?php selected($meta['tipo_animal'][0] ?? '', 'Perro'); ?>>Perro</option>
                 <option value="Gato" <?php selected($meta['tipo_animal'][0] ?? '', 'Gato'); ?>>Gato</option>
                 <option value="Otro" <?php selected($meta['tipo_animal'][0] ?? '', 'Otro'); ?>>Otro</option>
             </select>
+            <label for="raza">Raza</label>
             <input type="text" name="raza" value="<?php echo esc_attr($meta['raza'][0] ?? ''); ?>" placeholder="Raza (opcional)">
+            <label for="color">Color</label>
             <input type="text" name="color" value="<?php echo esc_attr($meta['color'][0] ?? ''); ?>" placeholder="Color (opcional)">
+            <label for="tamanio">Tamaño aproximado</label>
             <select name="tamanio">
                 <option value="Pequeño" <?php selected($meta['tamanio'][0] ?? '', 'Pequeño'); ?>>Pequeño</option>
                 <option value="Mediano" <?php selected($meta['tamanio'][0] ?? '', 'Mediano'); ?>>Mediano</option>
                 <option value="Grande" <?php selected($meta['tamanio'][0] ?? '', 'Grande'); ?>>Grande</option>
             </select>
+            <label for="edad">Edad aproximada</label>
             <select name="edad">
                 <option value="Infancia" <?php selected($meta['edad'][0] ?? '', 'Infancia'); ?>>Infancia</option>
                 <option value="Juventud" <?php selected($meta['edad'][0] ?? '', 'Juventud'); ?>>Juventud</option>
                 <option value="Adultez" <?php selected($meta['edad'][0] ?? '', 'Adultez'); ?>>Adultez</option>
             </select>
+            <label for="sexo">Sexo de la mascota</label>
             <select name="sexo">
                 <option value="Macho" <?php selected($meta['sexo'][0] ?? '', 'Macho'); ?>>Macho</option>
                 <option value="Hembra" <?php selected($meta['sexo'][0] ?? '', 'Hembra'); ?>>Hembra</option>
             </select>
+            <label for="identificacion">¿Tiene collar o identificación?</label>
             <select name="identificacion">
                 <option value="Sí" <?php selected($meta['identificacion'][0] ?? '', 'Sí'); ?>>Sí</option>
                 <option value="No" <?php selected($meta['identificacion'][0] ?? '', 'No'); ?>>No</option>
@@ -70,16 +79,22 @@ $foto_mascota = get_the_post_thumbnail_url($post_id, 'large') ?: 'https://humani
         <!-- Información de la Desaparición -->
         <fieldset>
             <legend>Información de la Desaparición</legend>
+            <label for="fecha_desaparicion">Fecha desaparición</label>
             <input type="date" name="fecha_desaparicion" value="<?php echo esc_attr($meta['fecha_desaparicion'][0] ?? ''); ?>" required>
+            <label for="ubicacion">Ultima ubicacion conocida</label>
             <input type="text" name="ubicacion" value="<?php echo esc_attr($meta['ubicacion'][0] ?? ''); ?>" required>
+            <label for="hora_desaparicion">Hora aproximada de desaparición</label>
             <input type="time" name="hora_desaparicion" value="<?php echo esc_attr($meta['hora_desaparicion'][0] ?? ''); ?>" placeholder="Hora aproximada">
+            <label for="recompensa">Recompensa ofrecida</label>
             <input type="text" name="recompensa" value="<?php echo esc_attr($meta['recompensa'][0] ?? ''); ?>" placeholder="Recompensa ofrecida (si aplica)">
         </fieldset>
 
         <!-- Información de Contacto -->
         <fieldset>
             <legend>Información de Contacto</legend>
+            <label for="telefono">Telefono</label>
             <input type="tel" name="telefono" value="<?php echo esc_attr($meta['telefono'][0] ?? ''); ?>" placeholder="Teléfono familiar o conocido" required>
+            <label for="correo">Correo electrónico</label>
             <input type="email" name="correo" value="<?php echo esc_attr($meta['correo'][0] ?? ''); ?>" placeholder="Correo electrónico (opcional)">
         </fieldset>
 
@@ -107,6 +122,7 @@ jQuery(document).ready(function($) {
             contentType: false,
             beforeSend: function() {
                 $('.frm-message').text('Enviando...');
+                document.querySelector('.frm-message').scrollIntoView({ behavior: 'smooth', block: 'end' });
             },
             success: function(response) {
                 const noticeClass = response.status === 1 ? 'success' : 'error';

@@ -96,7 +96,7 @@ add_action('humanitarios_send_post_pending_email', 'humanitarios_send_post_pendi
 /**
  *  Notificación al admin cuando el reporte es actualizado
  */
-function humanitarios_send_update_post_email($post_id) {
+function humanitarios_send_update_post_email($post_id, $updated_fields) {
     $post = get_post($post_id);
     
     if (!$post) {
@@ -112,14 +112,17 @@ function humanitarios_send_update_post_email($post_id) {
     }
 
     // Definir variables para la plantilla
-    $post_title = get_the_title($post_id);
+    $post_title  = get_the_title($post_id);
     $post_author = get_the_author_meta('display_name', $post->post_author);
-    $meta_data = get_post_meta($post_id);
-
+    if (empty($post_author)) {
+        $post_author = 'Sin autor';
+    }
+    
     // Asunto del correo
     $subject = 'Reporte actualizado pendiente de aprobación';
 
     // Cargar plantilla de email
+    // La plantilla (actualizacion-post.php) debe usar la variable $updated_fields para mostrar los cambios
     ob_start();
     include plugin_dir_path(__FILE__) . '../templates/emails/actualizacion-post.php';
     $message = ob_get_clean();
@@ -138,7 +141,8 @@ function humanitarios_send_update_post_email($post_id) {
         error_log('❌ Error: No se pudo enviar el correo de actualización al admin.');
     }
 }
-add_action('humanitarios_post_updated', 'humanitarios_send_update_post_email');
+add_action('humanitarios_post_updated', 'humanitarios_send_update_post_email', 10, 2);
+
 
 /**
  * Enviar correo cuando un post pasa de "pending" a "publish"

@@ -62,14 +62,21 @@
   padding: 10px 15px;
   color: white;
   background-color: grey;
+  margin-top: 10px;
+  border-radius: 8px;
 }
 
+@media (min-width: 500px) {
+  .frm-message {
+    width: 40%;
+  }
+}
 .frm-message.success {
-  background-color: green;
+  background-color: rgba(0, 128, 0, 0.726);
 }
 
 .frm-message.error {
-  background-color: orangered;
+  background-color: rgba(255, 68, 0, 0.733);
 }
 
 /** Single **/
@@ -77,14 +84,14 @@
   padding: 30px 40px;
   border-radius: 30px;
   width: 100%;
-  max-width: 650px;
+  max-width: 700px;
   margin: 50px auto;
   background-color: #ffff;
 }
 .inf-basica {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 30px;
 }
 .reporte-container header h1 {
   font: 500 28px / 40px Montserrat, sans-serif;
@@ -100,11 +107,21 @@
   height: 250px;
   width: 100%;
   max-width: 300px;
+  object-fit: cover;
 }
 @media (max-width: 500px) {
   .inf-basica {
     flex-wrap: wrap-reverse;
   }
+}
+.reporte-container a.button {
+  padding: 10px;
+  color: #fff;
+  background: #ce1126;
+  border-radius: 5px;
+}
+.reporte-container a.button:hover {
+  background-color: #a50e20;
 }
 
 /* Contenedor grid */
@@ -342,6 +359,31 @@
   font-size: 14px;
 }
 
+#humanitarios-filtro-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  color: #555;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23555" d="M7 10l5 5 5-5z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px;
+  padding-right: 30px;
+  margin-bottom: 10px;
+}
+
+#humanitarios-filtro-form select:focus {
+  border-color: #ce1126;
+  outline: none;
+}
+
 .filtro-subgroup {
   margin-bottom: 15px;
 }
@@ -463,4 +505,220 @@
 .cargar-mas[disabled] {
   background: #ddd;
   cursor: not-allowed;
+}
+
+/**
+ * Formularios de reporte (Personas y Mascotas)
+ */
+#report-person-form input,
+#report-pet-form input {
+  margin-bottom: 10px;
+}
+
+#report-person-form input[type="file"],
+#report-pet-form input[type="file"] {
+  border: 2px dashed #ccc;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  width: 100%;
+}
+
+#report-person-form input[type="file"]:hover,
+#report-pet-form input[type="file"]:hover {
+  border-color: #888;
+  background-color: #f1f1f1;
+}
+
+#report-person-form select,
+#report-pet-form select {
+  appearance: none; /* Elimina el estilo predeterminado del sistema */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  color: #555;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23555" d="M7 10l5 5 5-5z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px;
+  padding-right: 30px;
+  margin-bottom: 10px;
+}
+
+#report-person-form select:focus,
+#report-pet-form select:focus {
+  border-color: #ce1126;
+  outline: none;
+}
+
+#report-person-form button[type="submit"],
+#report-pet-form button[type="submit"] {
+  background: #ce1126;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+#report-person-form button[type="submit"]:hover,
+#report-pet-form button[type="submit"]:hover {
+  background: #a50e20;
+}
+
+/* Contenedor para alinear checkbox y texto */
+#report-person-form label,
+#report-pet-form label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre el checkbox y el texto */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Personalizar el checkbox */
+#report-person-form input[type="checkbox"],
+#report-pet-form input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ce1126;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Cambia el fondo cuando está seleccionado */
+#report-person-form input[type="checkbox"]:checked,
+#report-pet-form input[type="checkbox"]:checked {
+  background-color: #ce1126;
+  border-color: #ce1126;
+}
+
+/* Agrega el check ✔ dentro del checkbox */
+#report-person-form input[type="checkbox"]:checked::after,
+#report-pet-form input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Asegurar que el cursor cambia cuando se pasa sobre el texto */
+#report-person-form label:hover input[type="checkbox"],
+#report-pet-form label:hover input[type="checkbox"] {
+  border-color: #a50d1c;
+}
+
+/**
+* CSS edicion formularios reportes
+*/
+
+/* Estilos para inputs en los formularios */
+#report-person-form input,
+#report-pet-form input,
+#edit-person-form input,
+#edit-pet-form input {
+  margin-bottom: 10px;
+}
+
+#report-person-form .current-image,
+#report-pet-form .current-image,
+#edit-person-form .current-image,
+#edit-pet-form .current-image {
+  width: 100%;
+  max-width: 400px;
+  margin: 10px 0;
+}
+
+#report-person-form .current-image img,
+#report-pet-form .current-image img,
+#edit-person-form .current-image img,
+#edit-pet-form .current-image img {
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Estilos para input tipo file */
+#report-person-form input[type="file"],
+#report-pet-form input[type="file"],
+#edit-person-form input[type="file"],
+#edit-pet-form input[type="file"] {
+  border: 2px dashed #ccc;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  width: 100%;
+}
+
+#report-person-form input[type="file"]:hover,
+#report-pet-form input[type="file"]:hover,
+#edit-person-form input[type="file"]:hover,
+#edit-pet-form input[type="file"]:hover {
+  border-color: #888;
+  background-color: #f1f1f1;
+}
+
+/* Estilos para selects */
+#report-person-form select,
+#report-pet-form select,
+#edit-person-form select,
+#edit-pet-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 2px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  color: #555;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23555" d="M7 10l5 5 5-5z"></path></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px;
+  padding-right: 30px;
+  margin-bottom: 10px;
+}
+
+#report-person-form select:focus,
+#report-pet-form select:focus,
+#edit-person-form select:focus,
+#edit-pet-form select:focus {
+  border-color: #ce1126;
+  outline: none;
+}
+
+/* Botón de envío */
+#report-person-form button[type="submit"],
+#report-pet-form button[type="submit"],
+#edit-person-form button[type="submit"],
+#edit-pet-form button[type="submit"] {
+  background: #ce1126;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+#report-person-form button[type="submit"]:hover,
+#report-pet-form button[type="submit"]:hover,
+#edit-person-form button[type="submit"]:hover,
+#edit-pet-form button[type="submit"]:hover {
+  background: #a50e20;
 }

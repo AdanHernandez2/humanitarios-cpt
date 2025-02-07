@@ -219,8 +219,8 @@ function handle_edit_person_form() {
         // Actualizar el título del post con el nombre de la persona
         $nombre_completo = sanitize_text_field($_POST['nombre_completo'] ?? 'Anónimo');
         $post_data = [
-            'ID'         => $post_id,
-            'post_title' => $nombre_completo,
+            'ID'          => $post_id,
+            'post_title'  => $nombre_completo,
             'post_status' => 'pending' // Volver a revisión tras edición
         ];
         wp_update_post($post_data);
@@ -242,27 +242,43 @@ function handle_edit_person_form() {
             $attach_id = humanitarios_handle_file_upload($image_key, $post_id);
             if ($attach_id) {
                 update_post_meta($post_id, $image_key, $attach_id);
+                set_post_thumbnail($post_id, $attach_id);
             }
         }
 
         // Lista de metadatos a actualizar
         $meta_fields = [
-            'edad'                => 'absint',
-            'nacionalidad'        => 'sanitize_text_field',
-            'genero'              => 'sanitize_text_field',
-            'color_piel'          => 'sanitize_text_field',
-            'cabello'             => 'sanitize_text_field',
-            'altura'              => 'sanitize_text_field',
-            'fecha_desaparicion'  => 'sanitize_text_field',
-            'ubicacion'           => 'sanitize_text_field',
-            'hora_desaparicion'   => 'sanitize_text_field',
-            'vestimenta'          => 'sanitize_text_field',
-            'enfermedades'        => 'sanitize_text_field',
-            'telefono'            => 'sanitize_text_field',
-            'correo'              => 'sanitize_email',
-            'ubicacion_contacto'  => 'sanitize_text_field',
-            'calle'               => 'sanitize_text_field'
+            'edad'               => 'absint',
+            'nacionalidad'       => 'sanitize_text_field',
+            'genero'             => 'sanitize_text_field',
+            'color_piel'         => 'sanitize_text_field',
+            'cabello'            => 'sanitize_text_field',
+            'altura'             => 'sanitize_text_field',
+            'fecha_desaparicion' => 'sanitize_text_field',
+            'ubicacion'          => 'sanitize_text_field',
+            'hora_desaparicion'  => 'sanitize_text_field',
+            'vestimenta'         => 'sanitize_text_field',
+            'enfermedades'       => 'sanitize_text_field',
+            'telefono'           => 'sanitize_text_field',
+            'correo'             => 'sanitize_email',
+            'ubicacion_contacto' => 'sanitize_text_field',
+            'calle'              => 'sanitize_text_field'
         ];
+        
+        // Antes de actualizar, obtén los valores actuales y captura los cambios:
+        $updated_fields = [];
+        foreach ($meta_fields as $key => $sanitizer) {
+            if (isset($_POST[$key])) {
+                $old_value = get_post_meta($post_id, $key, true);
+                $new_value = call_user_func($sanitizer, $_POST[$key]);
+                if ($old_value !== $new_value) {
+                    $updated_fields[$key] = [
+                        'old' => $old_value,
+                        'new' => $new_value,
+                    ];
+                }
+            }
+        }
 
         // Guardar los metadatos
         foreach ($meta_fields as $key => $sanitizer) {
@@ -271,13 +287,13 @@ function handle_edit_person_form() {
             }
         }
 
-        // Acción para otros hooks
-        do_action('humanitarios_send_update_post_admin_email', $post_id); //para el admin
+        // Disparar el hook, pasando también los campos actualizados
+        do_action('humanitarios_post_updated', $post_id, $updated_fields);
 
         // Responder con éxito y redirigir al reporte editado
         wp_send_json([
             'status'  => 1,
-            'message' => 'Actualizacion de reporte enviado para revisión'
+            'message' => 'Actualización de reporte enviada para revisión'
         ]);
 
     } catch (Exception $e) {
@@ -288,7 +304,10 @@ function handle_edit_person_form() {
     }
 }
 
-// Edición de reportes de mascotas desaparecidas
+
+/**
+ *  Edición de reportes de mascotas desaparecidas
+ */
 add_action('wp_ajax_edit_pet_form', 'handle_edit_pet_form');
 
 function handle_edit_pet_form() {
@@ -314,8 +333,8 @@ function handle_edit_pet_form() {
         // Actualizar el título del post con el nombre de la mascota (o mantener el actual si está vacío)
         $nombre_mascota = sanitize_text_field($_POST['nombre_mascota'] ?? '');
         $post_data = [
-            'ID'         => $post_id,
-            'post_title' => !empty($nombre_mascota) ? $nombre_mascota : $post->post_title,
+            'ID'          => $post_id,
+            'post_title'  => !empty($nombre_mascota) ? $nombre_mascota : $post->post_title,
             'post_status' => 'pending' // Volver a revisión tras edición
         ];
         wp_update_post($post_data);
@@ -337,25 +356,41 @@ function handle_edit_pet_form() {
             $attach_id = humanitarios_handle_file_upload($image_key, $post_id);
             if ($attach_id) {
                 update_post_meta($post_id, $image_key, $attach_id);
+                set_post_thumbnail($post_id, $attach_id);
             }
         }
 
         // Lista de metadatos a actualizar
         $meta_fields = [
-            'tipo_animal'         => 'sanitize_text_field',
-            'raza'                => 'sanitize_text_field',
-            'color'               => 'sanitize_text_field',
-            'tamanio'             => 'sanitize_text_field',
-            'edad'                => 'sanitize_text_field',
-            'sexo'                => 'sanitize_text_field',
-            'identificacion'      => 'sanitize_text_field',
-            'fecha_desaparicion'  => 'sanitize_text_field',
-            'ubicacion'           => 'sanitize_text_field',
-            'hora_desaparicion'   => 'sanitize_text_field',
-            'recompensa'          => 'sanitize_text_field',
-            'telefono'            => 'sanitize_text_field',
-            'correo'              => 'sanitize_email'
+            'tipo_animal'        => 'sanitize_text_field',
+            'raza'               => 'sanitize_text_field',
+            'color'              => 'sanitize_text_field',
+            'tamanio'            => 'sanitize_text_field',
+            'edad'               => 'sanitize_text_field',
+            'sexo'               => 'sanitize_text_field',
+            'identificacion'     => 'sanitize_text_field',
+            'fecha_desaparicion' => 'sanitize_text_field',
+            'ubicacion'          => 'sanitize_text_field',
+            'hora_desaparicion'  => 'sanitize_text_field',
+            'recompensa'         => 'sanitize_text_field',
+            'telefono'           => 'sanitize_text_field',
+            'correo'             => 'sanitize_email'
         ];
+
+        // Antes de actualizar, obtén los valores actuales y captura los cambios:
+        $updated_fields = [];
+        foreach ($meta_fields as $key => $sanitizer) {
+            if (isset($_POST[$key])) {
+                $old_value = get_post_meta($post_id, $key, true);
+                $new_value = call_user_func($sanitizer, $_POST[$key]);
+                if ($old_value !== $new_value) {
+                    $updated_fields[$key] = [
+                        'old' => $old_value,
+                        'new' => $new_value,
+                    ];
+                }
+            }
+        }
 
         // Guardar los metadatos
         foreach ($meta_fields as $key => $sanitizer) {
@@ -364,8 +399,8 @@ function handle_edit_pet_form() {
             }
         }
 
-        // Acción para otros hooks
-        do_action('humanitarios_send_update_post_admin_email', $post_id); //para el admin
+        // Disparar el hook, pasando también los campos actualizados
+        do_action('humanitarios_post_updated', $post_id, $updated_fields);
 
         // Responder con éxito y redirigir al reporte editado
         wp_send_json([
@@ -380,6 +415,7 @@ function handle_edit_pet_form() {
         ]);
     }
 }
+
 
 // Helpers adicionales
 function humanitarios_sanitize_array($data, $sanitizer = 'sanitize_text_field') {

@@ -3,7 +3,9 @@
 defined('ABSPATH') || exit;
 
 
-// Editar creacion de reportes de personas
+/**
+ *  Creacion de reportes de personas
+ */
 function render_person_creation_form() {
   ob_start();
   include plugin_dir_path(__FILE__) . '../templates/parts/forms/post-creation-person-form.php'; // Ruta al formulario
@@ -11,7 +13,9 @@ function render_person_creation_form() {
 }
 add_shortcode('person_creation_form', 'render_person_creation_form');
 
-//Editar creacion de reportes de mascotas
+/**
+ *  Creacion de reportes de mascotas
+ */
 function render_pet_creation_form() {
   ob_start();
   include plugin_dir_path(__FILE__) . '../templates/parts/forms/post-creation-pets-form.php'; // Ruta al formulario
@@ -19,7 +23,9 @@ function render_pet_creation_form() {
 }
 add_shortcode('pet_creation_form', 'render_pet_creation_form');
 
-// Editar reportes personas
+/**
+ *  Editar reportes personas
+ */
 function render_edit_post_person_form() {
   ob_start();
   include plugin_dir_path(__FILE__) . '../templates/parts/forms/edit-post-person-form.php'; // Ruta al formulario de edición
@@ -27,16 +33,19 @@ function render_edit_post_person_form() {
 }
 add_shortcode('edit_post_person_form', 'render_edit_post_person_form');
 
-// Filtro de reportes
-function render_filter_form() {
-  ob_start();
-  include plugin_dir_path(__FILE__) . '../templates/parts/filters/filter-form.php'; // Ruta al formulario de edición
-  return ob_get_clean();
-}
-add_shortcode('filter_form', 'render_filter_form');
+/**
+ *  Editar reportes personas
+ */
+function render_edit_post_pets_form() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/forms/edit-post-pets-form.php'; // Ruta al formulario de edición
+    return ob_get_clean();
+  }
+  add_shortcode('edit_post_pets_form', 'render_edit_post_pets_form');
 
-// mostrar post 
-// Mostrar post sin paginación
+/**
+ *  Mostrar post sin paginación
+ */
 function humanitarios_combined_posts_shortcode($atts) {
     ob_start();
     
@@ -87,9 +96,7 @@ add_shortcode('mostrar_publicaciones', 'humanitarios_combined_posts_shortcode');
 /**
  *  Filtro de busqueda
  */
-
- add_shortcode('filtro_publicaciones', 'humanitarios_filtro_shortcode');
- function humanitarios_filtro_shortcode() {
+function humanitarios_filtro_shortcode() {
      ob_start();
      
      // Incluir formulario con el JS integrado
@@ -97,3 +104,4 @@ add_shortcode('mostrar_publicaciones', 'humanitarios_combined_posts_shortcode');
      
      return ob_get_clean();
  }
+ add_shortcode('filtro_publicaciones', 'humanitarios_filtro_shortcode');

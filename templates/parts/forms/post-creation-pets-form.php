@@ -15,29 +15,38 @@ if (!is_user_logged_in()) {
     <!-- Información Básica -->
     <fieldset>
         <legend>Información Básica</legend>
-        <input type="text" name="nombre_mascota" placeholder="Nombre de la mascota (opcional)">
+        <label for="nombre_mascota">Nombre de la mascota</label>
+        <input type="text" name="nombre_mascota" placeholder="Nombre de la mascota">
+        <label for="foto_mascota">Subir una foto de la mascota</label>
         <input type="file" name="foto_mascota">
+        <label for="tipo_animal">Tipo de animal</label>
         <select name="tipo_animal">
             <option value="Perro">Perro</option>
             <option value="Gato">Gato</option>
             <option value="Otro">Otro</option>
         </select>
+        <label for="raza">Raza</label>
         <input type="text" name="raza" placeholder="Raza (opcional)">
+        <label for="color">Color</label>
         <input type="text" name="color" placeholder="Color (opcional)">
+        <label for="tamanio">Tamaño aproximado</label>
         <select name="tamanio">
             <option value="Pequeño">Pequeño</option>
             <option value="Mediano">Mediano</option>
             <option value="Grande">Grande</option>
         </select>
+        <label for="edad">Edad aproximada</label>
         <select name="edad">
             <option value="Infancia">Infancia</option>
             <option value="Juventud">Juventud</option>
             <option value="Adultez">Adultez</option>
         </select>
+        <label for="sexo">Sexo de la mascota</label>
         <select name="sexo">
             <option value="Macho">Macho</option>
             <option value="Hembra">Hembra</option>
         </select>
+        <label for="identificacion">¿Tiene collar o identificación?</label>
         <select name="identificacion">
             <option value="Sí">Sí</option>
             <option value="No">No</option>
@@ -48,16 +57,22 @@ if (!is_user_logged_in()) {
     <!-- Información de la Desaparición -->
     <fieldset>
         <legend>Información de la Desaparición</legend>
+        <label for="fecha_desaparicion">Fecha desaparición</label>
         <input type="date" name="fecha_desaparicion" required>
+        <label for="ubicacion">Última ubicación conocida</label>
         <input type="text" name="ubicacion" placeholder="Última ubicación conocida (ciudad, barrio, referencia)" required>
+        <label for="hora_desaparicion">Hora aproximada de desaparición</label>
         <input type="time" name="hora_desaparicion" placeholder="Hora aproximada (opcional)">
+        <label for="recompensa">Recompensa ofrecida</label>
         <input type="text" name="recompensa" placeholder="Recompensa ofrecida (si aplica)">
     </fieldset>
 
     <!-- Información de Contacto -->
     <fieldset>
         <legend>Información de Familiar o Conocido</legend>
+        <label for="telefono">Teléfono</label>
         <input type="tel" name="telefono" placeholder="Teléfono familiar o conocido (0-000-000-0000)" required>
+        <label for="correo">Correo electrónico</label>
         <input type="email" name="correo" placeholder="Correo electrónico (opcional)">
     </fieldset>
 
@@ -92,6 +107,7 @@ jQuery(document).ready(function($) {
             contentType: false,
             beforeSend: function() {
                 $('.frm-message').text('Enviando...');
+                document.querySelector('.frm-message').scrollIntoView({ behavior: 'smooth', block: 'end' });
             },
             success: function(response) {
                 const noticeClass = response.status === 1 ? 'success' : 'error';
