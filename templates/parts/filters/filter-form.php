@@ -107,12 +107,14 @@
     </form>
 
     <div class="humanitarios-posts-grid"></div>
+    <div class="load-more-container"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('humanitarios-filtro-form');
     const resultadosContainer = document.querySelector('.humanitarios-posts-grid');
+    const loadMoreContainer = document.querySelector('.load-more-container');
     let currentPage = 1;
     let isLoading = false;
 
@@ -151,41 +153,42 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.text())
         .then(html => {
-            if (append) {
-                // Insertar antes del botón de "Cargar más"
-                const loadMoreButton = document.querySelector('.load-more');
-                if (loadMoreButton) {
-                    loadMoreButton.insertAdjacentHTML('beforebegin', html);
-                } else {
-                    resultadosContainer.innerHTML += html;
-                }
-            } else {
-                resultadosContainer.innerHTML = html;
+            // Crear un contenedor temporal para procesar la respuesta
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            // Extraer el botón "Cargar más" (si existe)
+            const newLoadMore = tempDiv.querySelector('.load-more');
+            if (newLoadMore) {
+                // Añadir el listener para el botón
+                newLoadMore.addEventListener('click', function() {
+                    newLoadMore.disabled = true;
+                    cargarResultados(currentPage + 1, true);
+                });
+                // Remover el botón del HTML de posts
+                newLoadMore.remove();
             }
-            moverBotonCargarMas();
-            initPagination();
+
+            // El resto del contenido serán los posts
+            const postsHTML = tempDiv.innerHTML;
+
+            if (append) {
+                resultadosContainer.innerHTML += postsHTML;
+            } else {
+                resultadosContainer.innerHTML = postsHTML;
+            }
+            
+            // Actualizar el contenedor del botón
+            loadMoreContainer.innerHTML = '';
+            if (newLoadMore) {
+                loadMoreContainer.appendChild(newLoadMore);
+            }
         })
         .catch(error => {
             resultadosContainer.innerHTML = '<div class="error"><?php _e("Error al cargar resultados", "humanitarios-cpt"); ?></div>';
         })
         .finally(() => {
             isLoading = false;
-        });
-    }
-
-    function moverBotonCargarMas() {
-        const loadMoreButton = document.querySelector('.load-more');
-        if (loadMoreButton) {
-            resultadosContainer.appendChild(loadMoreButton);
-        }
-    }
-
-    function initPagination() {
-        document.querySelectorAll('.load-more').forEach(button => {
-            button.addEventListener('click', () => {
-                button.disabled = true;
-                cargarResultados(currentPage + 1, true);
-            });
         });
     }
 

@@ -487,8 +487,14 @@
   text-align: center;
   margin: 30px 0;
 }
-
-.cargar-mas {
+.load-more-container {
+  text-align: center;
+}
+.load-more {
+  margin-bottom: 20px;
+}
+.cargar-mas,
+.load-more {
   background: #ce1126;
   color: white;
   border: none;
@@ -498,11 +504,13 @@
   transition: opacity 0.3s;
 }
 
-.cargar-mas:hover {
+.cargar-mas:hover,
+.load-more:hover {
   opacity: 0.9;
 }
 
-.cargar-mas[disabled] {
+.cargar-mas[disabled],
+.load-more[disabled] {
   background: #ddd;
   cursor: not-allowed;
 }
@@ -721,4 +729,25 @@
 #edit-person-form button[type="submit"]:hover,
 #edit-pet-form button[type="submit"]:hover {
   background: #a50e20;
+}
+
+.pagination {
+  text-align: center;
+  justify-content: center;
+  gap: 5px;
+}
+.page-numbers {
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: #ce1126;
+  color: white;
+  text-decoration: none;
+}
+.page-numbers.current {
+  background-color: #a50e20;
+  padding: 12px 15px;
+}
+.page-numbers:hover {
+  background-color: #a50e20;
+  color: white;
 }
