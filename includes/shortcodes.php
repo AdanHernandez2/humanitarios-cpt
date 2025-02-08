@@ -184,3 +184,23 @@ function humanitarios_user_posts_shortcode($atts) {
     return ob_get_clean();
 }
 add_shortcode('mostrar_publicaciones_usuario', 'humanitarios_user_posts_shortcode');
+
+function humanitarios_registration_form_shortcode() {
+    // Verificar si el usuario ya está logueado
+    if (is_user_logged_in()) {
+        return __('Ya estás registrado.', 'workreap');
+    }
+    
+    // Buffer con verificación de archivo
+    ob_start();
+    $template_path = plugin_dir_path(dirname(__FILE__)) . 'templates/parts/forms/registration-form.php';
+    
+    if (file_exists($template_path)) {
+        include $template_path;
+    } else {
+        echo __('Error: Plantilla no encontrada', 'workreap');
+    }
+    
+    return ob_get_clean();
+}
+add_shortcode('humanitarios_formulario_registro', 'humanitarios_registration_form_shortcode');

@@ -19,7 +19,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/filters.php';
 require_once plugin_dir_path(__FILE__) . 'includes/email-notifications.php';
 
 // Registrar CPTs al activar el plugin
-register_activation_hook(__FILE__, 'humanitarios_create_cpts');
+register_activation_hook(__FILE__, 'humanitarios_register_cpts');
 
 // Cargar traducciones
 add_action('plugins_loaded', function() {
@@ -78,5 +78,3 @@ function humanitarios_custom_templates($template) {
 }
 
 
-// Shortcode de ejemplo
-add_shortcode('formulario_registro', 'humanitarios_registration_form_shortcode');
