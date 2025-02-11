@@ -833,8 +833,11 @@ div.login-link a {
   color: white;
 }
 .wr-dashboard-sidebar-toggle-btn {
-  display: none !important;
+  display: none;
 }
 div.at-chatfloat {
   display: none;
+}
+.page-template-dashboard .wr-dashboard-sidebar-toggle-btn {
+  display: block;
 }
