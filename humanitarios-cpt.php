@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Humanitarios CPT
  * Description: Plugin para gestionar publicaciones de personas y mascotas perdidas, con formularios frontend y notificaciones.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Humanitarios
  * Text Domain: humanitarios.d
  */

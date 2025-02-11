@@ -96,6 +96,7 @@ add_shortcode('mostrar_publicaciones', 'humanitarios_combined_posts_shortcode');
 /**
  *  Filtro de busqueda
  */
+
 function humanitarios_filtro_shortcode() {
      ob_start();
      
@@ -108,7 +109,7 @@ function humanitarios_filtro_shortcode() {
  
 
  /**
- * Shortcode para mostrar las publicaciones del usuario logueado con paginación
+ *  Shortcode para mostrar las publicaciones del usuario logueado con paginación
  */
 function humanitarios_user_posts_shortcode($atts) {
     // Si el usuario no está logueado, mostramos un mensaje

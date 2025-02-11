@@ -132,6 +132,10 @@ div.login-link a {
 .wr-dashboard-sidebar-balance {
   display: none !important;
 }
+.wr-settingtab li:nth-child(3),
+.wr-dashboard-sidebar-action-button {
+  display: none;
+}
 
 /* Notificacion envio formulario */
 .frm-message {
@@ -827,4 +831,10 @@ div.login-link a {
 .page-numbers:hover {
   background-color: #a50e20;
   color: white;
+}
+.wr-dashboard-sidebar-toggle-btn {
+  display: none !important;
+}
+div.at-chatfloat {
+  display: none;
 }
