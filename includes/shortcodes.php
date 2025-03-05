@@ -22,7 +22,24 @@ function render_pet_creation_form() {
   return ob_get_clean();
 }
 add_shortcode('pet_creation_form', 'render_pet_creation_form');
-
+/**
+ *  Creacion de reportes de objetos
+ */
+function render_creation_lost_objects_form() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/forms/post-creation-lost-objects.php'; // Ruta al formulario
+    return ob_get_clean();
+  }
+  add_shortcode('creation_lost_objects_form', 'render_creation_lost_objects_form');
+/**
+ *  Creacion de reportes econtrados
+ */
+function render_found_form() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/forms/post-found-form.php'; // Ruta al formulario
+    return ob_get_clean();
+  }
+  add_shortcode('render_creation_found_form', 'render_found_form');
 /**
  *  Editar reportes personas
  */
@@ -34,7 +51,7 @@ function render_edit_post_person_form() {
 add_shortcode('edit_post_person_form', 'render_edit_post_person_form');
 
 /**
- *  Editar reportes personas
+ *  Editar reportes mascotas
  */
 function render_edit_post_pets_form() {
     ob_start();
@@ -42,7 +59,25 @@ function render_edit_post_pets_form() {
     return ob_get_clean();
   }
   add_shortcode('edit_post_pets_form', 'render_edit_post_pets_form');
-
+/**
+ *  Editar reportes de objetos
+ */
+function render_edit_post_lost_objects() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/forms/edit-post-lost-objects.php'; // Ruta al formulario
+    return ob_get_clean();
+  }
+  add_shortcode('edit_post_lost_objects', 'render_edit_post_lost_objects');
+/**
+ *  Editar reportes de encontrados
+ */
+function render_edit_post_found() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/forms/edit-post-found-form.php'; // Ruta al formulario
+    return ob_get_clean();
+  }
+  add_shortcode('edit_post_found', 'render_edit_post_found');
+  
 /**
  *  Mostrar post sin paginación
  */

@@ -1,0 +1,57 @@
+/* Grid de campos */
+.humanitarios-metabox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.humanitarios-metabox-field {
+  margin-bottom: 1.5rem;
+}
+
+/* Galería */
+.humanitarios-gallery-wrapper {
+  margin: 1rem 0;
+}
+
+.humanitarios-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.humanitarios-gallery-item {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.humanitarios-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+
+.humanitarios-remove-image {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: #d63638;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.humanitarios-remove-image:hover {
+  opacity: 1;
+}

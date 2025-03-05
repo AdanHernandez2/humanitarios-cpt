@@ -1,118 +1,199 @@
 <?php
 defined('ABSPATH') || exit;
 
+/**
+ * Registra los metaboxes
+ */
 function humanitarios_add_meta_boxes() {
-  add_meta_box(
-      'humanitarios_meta_box',
-      'Información Adicional',
-      'humanitarios_meta_box_callback',
-      ['personas_perdidas', 'mascotas_perdidas'],
-      'normal',
-      'high'
-  );
+    add_meta_box(
+        'humanitarios_info_meta_box',
+        'Información Detallada',
+        'humanitarios_info_meta_box_callback',
+        ['personas_perdidas', 'mascotas_perdidas'],
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
+        'humanitarios_galeria_meta_box',
+        'Galería de Imágenes',
+        'humanitarios_galeria_meta_box_callback',
+        ['personas_perdidas', 'mascotas_perdidas'],
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
+        'humanitarios_status_meta_box',
+        'Estado del Reporte',
+        'humanitarios_status_meta_box_callback',
+        ['personas_perdidas', 'mascotas_perdidas'],
+        'side',
+        'high'
+    );
 }
 add_action('add_meta_boxes', 'humanitarios_add_meta_boxes');
 
-function humanitarios_meta_box_callback($post) {
-  wp_nonce_field('humanitarios_save_meta_box', 'humanitarios_meta_box_nonce');
+/**
+ * Callback para el metabox de información
+ */
+function humanitarios_info_meta_box_callback($post) {
+    wp_nonce_field('humanitarios_save_meta_box', 'humanitarios_meta_box_nonce');
+    
+    // Obtener los campos personalizados desde el helper
+    $fields = humanitarios_get_custom_fields($post->post_type);
+    
+    echo '<div class="humanitarios-metabox-grid">';
+    foreach ($fields as $key => $config) {
+        $current_value = get_post_meta($post->ID, $key, true);
+        echo '<div class="humanitarios-metabox-field">';
+        echo '<label for="'. esc_attr($key) .'">'. esc_html($config['label']) .'</label>';
+        
+        $attributes = '';
+        if (!empty($config['required'])) {
+            $attributes .= ' required';
+        }
+        if (!empty($config['placeholder'])) {
+            $attributes .= ' placeholder="'. esc_attr($config['placeholder']) .'"';
+        }
 
-  // Definir los campos personalizados
-  $fields = [
-      'personas_perdidas' => [
-          'edad' => 'Edad',
-          'nacionalidad' => 'Nacionalidad',
-          'genero' => 'Género',
-          'color_piel' => 'Color de piel',
-          'cabello' => 'Cabello',
-          'altura' => 'Altura',
-          'fecha_desaparicion' => 'Fecha de desaparición',
-          'ubicacion' => 'Ubicación',
-          'hora_desaparicion' => 'Hora de desaparición',
-          'vestimenta' => 'Vestimenta',
-          'enfermedades' => 'Enfermedades',
-          'telefono' => 'Teléfono',
-          'correo' => 'Correo electrónico',
-          'ubicacion_contacto' => 'Ubicación de contacto',
-          'calle' => 'Calle'
-      ],
-      'mascotas_perdidas' => [
-          'tipo_animal' => 'Tipo de Animal',
-          'raza' => 'Raza',
-          'color' => 'Color',
-          'tamanio' => 'Tamaño',
-          'edad' => 'Edad',
-          'sexo' => 'Sexo',
-          'identificacion' => 'Identificación',
-          'fecha_desaparicion' => 'Fecha de desaparición',
-          'ubicacion' => 'Ubicación',
-          'hora_desaparicion' => 'Hora de desaparición',
-          'recompensa' => 'Recompensa',
-          'telefono' => 'Teléfono',
-          'correo' => 'Correo electrónico'
-      ]
-  ];
-
-  $post_type = get_post_type($post);
-  if (!isset($fields[$post_type])) return;
-
-  echo '<table class="form-table">';
-  foreach ($fields[$post_type] as $key => $label) {
-      $value = get_post_meta($post->ID, $key, true);
-      echo '<tr>';
-      echo '<th><label for="'. esc_attr($key) .'">'. esc_html($label) .'</label></th>';
-      echo '<td><input type="text" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" value="'. esc_attr($value) .'" class="regular-text"></td>';
-      echo '</tr>';
-  }
-  echo '</table>';
+        switch ($config['type']) {
+            case 'textarea':
+                echo '<textarea id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                      class="widefat"'. $attributes .'>'. esc_textarea($current_value) .'</textarea>';
+                break;
+                
+            case 'select':
+                echo '<select id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       class="widefat"'. $attributes .'>';
+                if (!empty($config['placeholder'])) {
+                    echo '<option value="">'. esc_html($config['placeholder']) .'</option>';
+                }
+                foreach ($config['options'] as $value => $label) {
+                    echo '<option value="'. esc_attr($value) .'" '. selected($current_value, $value, false) .'>'. esc_html($label) .'</option>';
+                }
+                echo '</select>';
+                break;
+                
+            case 'date':
+                echo '<input type="date" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                break;
+                
+            case 'time':
+                echo '<input type="time" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                break;
+                
+            case 'email':
+                echo '<input type="email" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                break;
+                
+            case 'number':
+                echo '<input type="number" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="small-text"
+                       min="'. ($config['min'] ?? '') .'" max="'. ($config['max'] ?? '') .'"'. $attributes .'>';
+                break;
+                
+            case 'tel':
+                echo '<input type="tel" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                break;
+                
+            default:
+                echo '<input type="text" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+        }
+        
+        if (!empty($config['description'])) {
+            echo '<p class="description">'. esc_html($config['description']) .'</p>';
+        }
+        
+        echo '</div>';
+    }
+    echo '</div>';
 }
 
+/**
+ * Callback para el metabox de galería
+ */
+function humanitarios_galeria_meta_box_callback($post) {
+    wp_nonce_field('humanitarios_save_gallery', 'humanitarios_gallery_nonce');
+    $gallery = get_post_meta($post->ID, 'humanitarios_galeria', true);
+    ?>
+    <div class="humanitarios-gallery-wrapper">
+        <ul class="humanitarios-gallery-grid">
+            <?php if ($gallery) : foreach ($gallery as $image_id) : 
+                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                ?>
+                <li class="humanitarios-gallery-item">
+                    <img src="<?php echo esc_url($image_url); ?>" alt="">
+                    <input type="hidden" name="humanitarios_galeria[]" value="<?php echo absint($image_id); ?>">
+                    <button type="button" class="humanitarios-remove-image">&times;</button>
+                </li>
+            <?php endforeach; endif; ?>
+        </ul>
+        <button type="button" class="button humanitarios-add-images">Agregar Imágenes</button>
+    </div>
+    <?php
+}
 
+/**
+ * Callback para el metabox de estado
+ */
+function humanitarios_status_meta_box_callback($post) {
+    $current_status = $post->post_status;
+    $statuses = [
+        'publish' => 'Publicado',
+        'pending' => 'En Revisión',
+        'draft'   => 'Borrador'
+    ];
+    
+    echo '<select name="post_status" id="post_status" class="widefat">';
+    foreach ($statuses as $value => $label) {
+        printf(
+            '<option value="%s"%s>%s</option>',
+            esc_attr($value),
+            selected($current_status, $value, false),
+            esc_html($label)
+        );
+    }
+    echo '</select>';
+}
+
+/**
+ * Guarda los datos de los metaboxes
+ */
 function humanitarios_save_meta_box($post_id) {
-  // Verificar nonce
-  if (!isset($_POST['humanitarios_meta_box_nonce']) || !wp_verify_nonce($_POST['humanitarios_meta_box_nonce'], 'humanitarios_save_meta_box')) {
-      return;
-  }
+    // Verificar nonce principal
+    if (!isset($_POST['humanitarios_meta_box_nonce']) || 
+        !wp_verify_nonce($_POST['humanitarios_meta_box_nonce'], 'humanitarios_save_meta_box')) {
+        return;
+    }
+    
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
 
-  // Evitar autoguardado
-  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-      return;
-  }
+    // Guardar campos principales
+    $fields = humanitarios_get_custom_fields(get_post_type($post_id));
+    foreach ($fields as $key => $config) {
+        if (isset($_POST[$key])) {
+            $sanitized_value = call_user_func(
+                $config['sanitize'] ?? 'sanitize_text_field', 
+                $_POST[$key]
+            );
+            update_post_meta($post_id, $key, $sanitized_value);
+        }
+    }
 
-  // Verificar permisos
-  if (!current_user_can('edit_post', $post_id)) {
-      return;
-  }
-
-  // Definir los campos personalizados
-  $fields = [
-      'edad', 'nacionalidad', 'genero', 'color_piel', 'cabello', 'altura',
-      'fecha_desaparicion', 'ubicacion', 'hora_desaparicion', 'vestimenta',
-      'enfermedades', 'telefono', 'correo', 'ubicacion_contacto', 'calle',
-      'nombre_mascota', 'tipo_animal', 'raza', 'color', 'tamanio', 'edad',
-      'sexo', 'identificacion', 'recompensa'
-  ];
-
-  foreach ($fields as $field) {
-      if (isset($_POST[$field])) {
-          update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
-      }
-  }
+    // Guardar galería
+    if (isset($_POST['humanitarios_galeria']) && wp_verify_nonce($_POST['humanitarios_gallery_nonce'], 'humanitarios_save_gallery')) {
+        $gallery = array_map('absint', $_POST['humanitarios_galeria']);
+        update_post_meta($post_id, 'humanitarios_galeria', $gallery);
+    } else {
+        delete_post_meta($post_id, 'humanitarios_galeria');
+    }
 }
 add_action('save_post', 'humanitarios_save_meta_box');
 
-
-function humanitarios_custom_columns($columns) {
-  $columns['ubicacion'] = 'Ubicación';
-  $columns['telefono'] = 'Teléfono';
-  return $columns;
-}
-add_filter('manage_personas_perdidas_posts_columns', 'humanitarios_custom_columns');
-add_filter('manage_mascotas_perdidas_posts_columns', 'humanitarios_custom_columns');
-
-function humanitarios_custom_columns_content($column, $post_id) {
-  if (in_array($column, ['ubicacion', 'telefono'])) {
-      echo esc_html(get_post_meta($post_id, $column, true));
-  }
-}
-add_action('manage_personas_perdidas_posts_custom_column', 'humanitarios_custom_columns_content', 10, 2);
-add_action('manage_mascotas_perdidas_posts_custom_column', 'humanitarios_custom_columns_content', 10, 2);

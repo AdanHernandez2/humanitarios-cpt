@@ -14,6 +14,18 @@ function humanitarios_register_cpts() {
             'icon'          => 'dashicons-pets',
             'supports'      => ['title', 'author', 'thumbnail', 'custom-fields'],
             'status_config' => true
+        ],
+        'lost_objects' => [
+            'label'         => 'Objetos Perdidos',
+            'icon'          => 'dashicons-search',
+            'supports'      => ['title', 'author', 'thumbnail', 'custom-fields'],
+            'status_config' => true
+        ],
+        'found-form' => [
+            'label'         => 'Encontrados',
+            'icon'          => 'dashicons-megaphone',
+            'supports'      => ['title', 'author', 'thumbnail', 'custom-fields'],
+            'status_config' => true
         ]
     ];
 
@@ -44,11 +56,6 @@ function humanitarios_register_cpts() {
             'rewrite'             => ['slug' => sanitize_title($config['label'])],
         ];
 
-        // Configuración de estado inicial
-        if ($config['status_config']) {
-            $args['register_meta_box_cb'] = 'humanitarios_status_meta_box';
-        }
-
         register_post_type($slug, $args);
     }
 
@@ -57,44 +64,12 @@ function humanitarios_register_cpts() {
 }
 add_action('init', 'humanitarios_register_cpts');
 
-
 function humanitarios_default_post_status($data, $postarr) {
     if (
-        in_array($data['post_type'], ['personas_perdidas', 'mascotas_perdidas']) &&
+        in_array($data['post_type'], ['personas_perdidas', 'mascotas_perdidas', 'lost_objects', 'found-form']) && // Cambiado de 'encontrados' a 'found-form'
         $data['post_status'] == 'auto-draft'
     ) {
         $data['post_status'] = 'pending';
     }
     return $data;
-}
-
-function humanitarios_status_meta_box($post) {
-    add_meta_box(
-        'humanitarios-status',
-        'Estado del Reporte',
-        'humanitarios_status_meta_box_callback',
-        null,
-        'side',
-        'high'
-    );
-}
-
-function humanitarios_status_meta_box_callback($post) {
-    $current_status = $post->post_status;
-    $statuses = [
-        'publish' => 'Publicado',
-        'pending' => 'En Revisión',
-        'draft'   => 'Borrador'
-    ];
-    
-    echo '<select name="post_status" id="post_status">';
-    foreach ($statuses as $value => $label) {
-        printf(
-            '<option value="%s"%s>%s</option>',
-            $value,
-            selected($current_status, $value, false),
-            $label
-        );
-    }
-    echo '</select>';
 }

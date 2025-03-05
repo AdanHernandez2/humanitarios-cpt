@@ -9,60 +9,44 @@ if (!is_user_logged_in()) {
 }
 ?>
 
-<form id="report-pet-form" enctype="multipart/form-data">
-    <h2>Reportar Mascota Desaparecida</h2>
+<form id="report-object-form" enctype="multipart/form-data">
+    <h2>Reportar Objeto Perdido</h2>
 
-    <!-- Información Básica -->
+    <!-- Información del Objeto -->
     <fieldset>
-        <legend>Información Básica</legend>
-        <label for="nombre_mascota">Nombre de la mascota</label>
-        <input type="text" name="nombre_mascota" placeholder="Nombre de la mascota">
-        <label for="foto_mascota">Subir hasta 10 fotografías (máximo 500 KB cada una)</label>
-        <input type="file" name="foto_mascota[]" id="foto_mascota" multiple accept="image/*">
-        <!-- Contenedor para previsualizar las imágenes -->
-        <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
-        <label for="tipo_animal">Tipo de animal</label>
-        <select name="tipo_animal">
-            <option value="Perro">Perro</option>
-            <option value="Gato">Gato</option>
-            <option value="Otro">Otro</option>
-        </select>
-        <label for="raza">Raza</label>
-        <input type="text" name="raza" placeholder="Raza (opcional)">
-        <label for="color">Color</label>
-        <input type="text" name="color" placeholder="Color (opcional)">
-        <label for="tamanio">Tamaño aproximado</label>
-        <select name="tamanio">
-            <option value="Pequeño">Pequeño</option>
-            <option value="Mediano">Mediano</option>
-            <option value="Grande">Grande</option>
-        </select>
-        <label for="edad">Edad aproximada</label>
-        <select name="edad">
-            <option value="Infancia">Infancia</option>
-            <option value="Juventud">Juventud</option>
-            <option value="Adultez">Adultez</option>
-        </select>
-        <label for="sexo">Sexo de la mascota</label>
-        <select name="sexo">
-            <option value="macho">Macho</option>
-            <option value="hembra">Hembra</option>
-        </select>
-        <label for="identificacion">¿Tiene collar o identificación?</label>
-        <select name="identificacion">
-            <option value="si">Sí</option>
-            <option value="no">No</option>
-            <option value="desconocido">No se sabe</option>
-        </select>
-    </fieldset>
+        <legend>Información del Objeto</legend>
+        
+        <!-- Nombre y descripción del objeto -->
+        <label for="nombre_objeto">Nombre del objeto</label>
+        <input type="text" name="nombre_objeto" placeholder="Ej: Billetera, Teléfono, etc." required>
 
-    <!-- Información de la Desaparición -->
-    <fieldset>
-        <legend>Información de la Desaparición</legend>
-        <label for="fecha_desaparicion">Fecha desaparición</label>
-        <input type="date" name="fecha_desaparicion" required>
-        <label for="provincia">Provincia</label>
+        <label for="tipo_objeto">Tipo de objeto</label>
+        <input type="text" name="tipo_objeto" placeholder="Ej: Electrónico, Ropa, Accesorio, etc." required>
+
+        <label for="descripcion_objeto">Descripción detallada</label>
+        <textarea name="descripcion_objeto" placeholder="Describe el objeto (color, tamaño, características únicas, etc.)" required></textarea>
+
+        <!-- Detalles adicionales del objeto -->
+        <label for="marca_objeto">Marca (si aplica)</label>
+        <input type="text" name="marca_objeto" placeholder="Ej: Samsung, Nike, etc.">
+
+        <label for="modelo_objeto">Modelo (si aplica)</label>
+        <input type="text" name="modelo_objeto" placeholder="Ej: Galaxy S21, Air Max 90, etc.">
+
+        <label for="color_objeto">Color</label>
+        <input type="text" name="color_objeto" placeholder="Ej: Negro, Rojo, Azul, etc.">
+
+        <label for="estado_objeto">Estado del objeto</label>
+        <select name="estado_objeto">
+            <option value="nuevo">Nuevo</option>
+            <option value="usado">Usado</option>
+            <option value="dañado">Dañado</option>
+        </select>
+
+        <!-- Ubicación donde se perdió el objeto -->
+        <label for="provincia">Provincia donde se perdió</label>
         <select name="provincia" id="provincia" required>
+            <option value="">Seleccione una provincia</option>
             <option value="Azua">Azua</option>
             <option value="Bahoruco">Bahoruco</option>
             <option value="Barahona">Barahona</option>
@@ -96,27 +80,37 @@ if (!is_user_logged_in()) {
             <option value="Santo Domingo">Santo Domingo</option>
             <option value="Valverde">Valverde</option>
         </select>
-        <label for="ubicacion">Última ubicación conocida</label>
-        <input type="text" name="ubicacion" placeholder="Última ubicación conocida (ciudad, barrio, referencia)" required>
-        <label for="hora_desaparicion">Hora aproximada de desaparición</label>
-        <input type="time" name="hora_desaparicion" placeholder="Hora aproximada (opcional)">
-        <label for="recompensa">Recompensa ofrecida</label>
-        <input type="text" name="recompensa" placeholder="Recompensa ofrecida (si aplica)">
+
+        <label for="lugar_perdida">Lugar específico donde se perdió</label>
+        <input type="text" name="lugar_perdida" placeholder="Ej: Parque Central, Calle Principal #123, etc." required>
+
+        <label for="fecha_perdida">Fecha en que se perdió</label>
+        <input type="date" name="fecha_perdida" required>
+
+        <!-- Subida de fotografías -->
+        <label for="foto_objeto">Subir fotografías (máximo 500 KB cada una)</label>
+        <input type="file" name="foto_objeto[]" id="foto_objeto" multiple accept="image/*">
+        <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
     </fieldset>
 
     <!-- Información de Contacto -->
     <fieldset>
-        <legend>Información de Familiar o Conocido</legend>
-        <label for="nombre_familiar1">Nombre del Familiar 1</label>
-        <input type="text" name="nombre_familiar1" placeholder="Nombre del familiar" required>
-        <label for="nombre_familiar2">Nombre del Familiar 2</label>
-        <input type="text" name="nombre_familiar2" placeholder="Nombre del familiar" required>
-        <label for="telefono_1">Teléfono familiar 1</label>
-        <input type="tel" name="telefono_1" placeholder="Teléfono familiar o conocido (0-000-000-0000)" required>
-        <label for="telefono_2">Teléfono familiar 2</label>
-        <input type="tel" name="telefono_2" placeholder="Teléfono familiar o conocido (0-000-000-0000)" required>
-        <label for="provincia_contacto">Provincia</label>
+        <legend>Información de Contacto</legend>
+        
+        <!-- Datos del contacto -->
+        <label for="nombre_contacto">Nombre de contacto</label>
+        <input type="text" name="nombre_contacto" placeholder="Nombre completo" required>
+
+        <label for="telefono_contacto">Teléfono de contacto</label>
+        <input type="tel" name="telefono_contacto" placeholder="Ej: 1-809-555-1234" required>
+
+        <label for="correo_contacto">Correo electrónico</label>
+        <input type="email" name="correo_contacto" placeholder="Ej: contacto@example.com">
+
+        <!-- Ubicación del contacto -->
+        <label for="provincia_contacto">Provincia de contacto</label>
         <select name="provincia_contacto" id="provincia_contacto" required>
+            <option value="">Seleccione una provincia</option>
             <option value="Azua">Azua</option>
             <option value="Bahoruco">Bahoruco</option>
             <option value="Barahona">Barahona</option>
@@ -150,10 +144,9 @@ if (!is_user_logged_in()) {
             <option value="Santo Domingo">Santo Domingo</option>
             <option value="Valverde">Valverde</option>
         </select>
-        <label for="calle">Calle especifica</label>
-        <input type="text" name="calle" placeholder="Ciudad / calle / centro / barrio específico">
-        <label for="correo">Correo electrónico</label>
-        <input type="email" name="correo" placeholder="Correo electrónico (opcional)">
+
+        <label for="direccion_contacto">Dirección de contacto</label>
+        <input type="text" name="direccion_contacto" placeholder="Ej: Calle Principal #123, Ciudad" required>
     </fieldset>
 
     <!-- Aceptación de términos -->
@@ -162,11 +155,14 @@ if (!is_user_logged_in()) {
         Acepto compartir esta información para ayudar en la búsqueda.
     </label>
 
-    <input type="hidden" name="action" value="submit_pet_form">
-    <input type="hidden" name="humanitarios_nonce" value="<?php echo wp_create_nonce('submit_pet_form'); ?>">
+    <!-- Campos ocultos para procesamiento -->
+    <input type="hidden" name="action" value="submit_lost_object_form">
+    <input type="hidden" name="humanitarios_nonce" value="<?php echo wp_create_nonce('submit_lost_object_form'); ?>">
     
+    <!-- Botón de envío -->
     <button id="submit" type="submit">Enviar Reporte</button>
 
+    <!-- Mensaje de respuesta -->
     <p class="frm-message"></p>
 </form>
 <script>
@@ -175,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_TOTAL_SIZE = 10 * 1024 * 1024; // 10 MB
     const MAX_FILES = 10;
 
-    const fileInput = document.getElementById('foto_mascota');
+    const fileInput = document.getElementById('foto_objeto');
     const previewContainer = document.getElementById('image-preview');
     let allFiles = [];
 
@@ -290,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script>
 jQuery(document).ready(function($) {
-    $('#report-pet-form').submit(function(e) {
+    $('#report-object-form').submit(function(e) {
         e.preventDefault();
 
         var formData = new FormData(this);
