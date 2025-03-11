@@ -281,7 +281,6 @@ div.login-link a {
 /**
 *  Archive
 */
-/* Archive Container */
 .humanitarios-archive-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -337,7 +336,16 @@ div.login-link a {
   background: #f8f9fa;
   border-radius: 12px;
 }
-
+.encontrados-filtro-form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+@media (max-width: 500px) {
+  .encontrados-filtro-form {
+    flex-wrap: wrap;
+  }
+}
 @media (min-width: 600px) {
   .bloque-1 {
     display: flex;
@@ -554,13 +562,17 @@ div.login-link a {
 }
 
 /**
- * Formularios de reporte (Personas y Mascotas)
+ * Formularios de reporte 
  */
+#report-encontrado-form,
+#report-object-form,
 #report-person-form input,
 #report-pet-form input {
   margin-bottom: 10px;
 }
 
+#report-encontrado-form input[type="file"],
+#report-object-form input[type="file"],
 #report-person-form input[type="file"],
 #report-pet-form input[type="file"] {
   border: 2px dashed #ccc;
@@ -571,12 +583,16 @@ div.login-link a {
   width: 100%;
 }
 
+#report-encontrado-form input[type="file"]:hover,
+#report-object-form input[type="file"]:hover,
 #report-person-form input[type="file"]:hover,
 #report-pet-form input[type="file"]:hover {
   border-color: #888;
   background-color: #f1f1f1;
 }
 
+#report-encontrado-form select,
+#report-object-form select,
 #report-person-form select,
 #report-pet-form select {
   appearance: none; /* Elimina el estilo predeterminado del sistema */
@@ -598,12 +614,16 @@ div.login-link a {
   margin-bottom: 10px;
 }
 
+#report-encontrado-form select:focus,
+#report-object-form select:focus,
 #report-person-form select:focus,
 #report-pet-form select:focus {
   border-color: #ce1126;
   outline: none;
 }
 
+#report-encontrado-form button[type="submit"],
+#report-object-form button[type="submit"],
 #report-person-form button[type="submit"],
 #report-pet-form button[type="submit"] {
   background: #ce1126;
@@ -612,12 +632,16 @@ div.login-link a {
   border-radius: 5px;
 }
 
+#report-encontrado-form button[type="submit"]:hover,
+#report-object-form button[type="submit"]:hover,
 #report-person-form button[type="submit"]:hover,
 #report-pet-form button[type="submit"]:hover {
   background: #a50e20;
 }
 
 /* Contenedor para alinear checkbox y texto */
+#report-encontrado-form label,
+#report-object-form label,
 #report-person-form label,
 #report-pet-form label {
   display: flex;
@@ -628,6 +652,8 @@ div.login-link a {
 }
 
 /* Personalizar el checkbox */
+#report-encontrado-form input[type="checkbox"],
+#report-object-form input[type="checkbox"],
 #report-person-form input[type="checkbox"],
 #report-pet-form input[type="checkbox"] {
   appearance: none;
@@ -644,6 +670,8 @@ div.login-link a {
 }
 
 /* Cambia el fondo cuando está seleccionado */
+#report-encontrado-form input[type="checkbox"]:checked,
+#report-object-form input[type="checkbox"]:checked,
 #report-person-form input[type="checkbox"]:checked,
 #report-pet-form input[type="checkbox"]:checked {
   background-color: #ce1126;
@@ -651,6 +679,8 @@ div.login-link a {
 }
 
 /* Agrega el check ✔ dentro del checkbox */
+#report-encontrado-form input[type="checkbox"]:checked::after,
+#report-object-form input[type="checkbox"]:checked::after,
 #report-person-form input[type="checkbox"]:checked::after,
 #report-pet-form input[type="checkbox"]:checked::after {
   content: "✔";
@@ -664,16 +694,22 @@ div.login-link a {
 }
 
 /* Asegurar que el cursor cambia cuando se pasa sobre el texto */
+#report-encontrado-form label:hover input[type="checkbox"],
+#report-object-form label:hover input[type="checkbox"],
 #report-person-form label:hover input[type="checkbox"],
 #report-pet-form label:hover input[type="checkbox"] {
   border-color: #a50d1c;
 }
 
 /**
-* CSS edicion formularios reportes
+* CSS Formulario de edicion
 */
 
 /* Estilos para inputs en los formularios */
+#report-encontrado-form,
+#report-object-form,
+#edit-found-form,
+#edit-lost-object-form,
 #report-person-form input,
 #report-pet-form input,
 #edit-person-form input,
@@ -681,24 +717,36 @@ div.login-link a {
   margin-bottom: 10px;
 }
 
-#report-person-form .current-image,
-#report-pet-form .current-image,
-#edit-person-form .current-image,
-#edit-pet-form .current-image {
+#report-encontrado-form .current-images,
+#report-object-form .current-images,
+#edit-found-form .current-images,
+#edit-lost-object-form .current-images,
+#report-person-form .current-images,
+#report-pet-form .current-images,
+#edit-person-form .current-images,
+#edit-pet-form .current-images {
   width: 100%;
   max-width: 400px;
   margin: 10px 0;
 }
 
-#report-person-form .current-image img,
-#report-pet-form .current-image img,
-#edit-person-form .current-image img,
-#edit-pet-form .current-image img {
+#report-encontrado-form .current-images img,
+#report-object-form .current-images img,
+#edit-found-form .current-images img,
+#edit-lost-object-form .current-images img,
+#report-person-form .current-images img,
+#report-pet-form .current-images img,
+#edit-person-form .current-images img,
+#edit-pet-form .current-images img {
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
 /* Estilos para input tipo file */
+#report-encontrado-form input[type="file"],
+#report-object-form input[type="file"],
+#edit-found-form input[type="file"],
+#edit-lost-object-form input[type="file"],
 #report-person-form input[type="file"],
 #report-pet-form input[type="file"],
 #edit-person-form input[type="file"],
@@ -711,6 +759,10 @@ div.login-link a {
   width: 100%;
 }
 
+#report-encontrado-form input[type="file"]:hover,
+#report-object-form input[type="file"]:hover,
+#edit-found-form input[type="file"]:hover,
+#edit-lost-object-form input[type="file"]:hover,
 #report-person-form input[type="file"]:hover,
 #report-pet-form input[type="file"]:hover,
 #edit-person-form input[type="file"]:hover,
@@ -720,6 +772,10 @@ div.login-link a {
 }
 
 /* Estilos para selects */
+#report-encontrado-form select,
+#report-object-form select,
+#edit-found-form select,
+#edit-lost-object-form select,
 #report-person-form select,
 #report-pet-form select,
 #edit-person-form select,
@@ -743,6 +799,10 @@ div.login-link a {
   margin-bottom: 10px;
 }
 
+#report-encontrado-form select:focus,
+#report-object-form select:focus,
+#edit-found-form select:focus,
+#edit-lost-object-form select:focus,
 #report-person-form select:focus,
 #report-pet-form select:focus,
 #edit-person-form select:focus,
@@ -753,6 +813,10 @@ div.login-link a {
 
 /* Botón de envío */
 .container_single_humanitarios .btn,
+#report-encontrado-form button[type="submit"],
+#report-object-form button[type="submit"],
+#edit-found-form button[type="submit"],
+#edit-lost-object-form button[type="submit"],
 #report-person-form button[type="submit"],
 #report-pet-form button[type="submit"],
 #edit-person-form button[type="submit"],
@@ -762,9 +826,14 @@ div.login-link a {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
+  margin-top: 10px;
 }
 
 .container_single_humanitarios .btn:hover,
+#report-encontrado-form button[type="submit"]:hover,
+#report-object-form button[type="submit"]:hover,
+#edit-found-form button[type="submit"]:hover,
+#edit-lost-object-form button[type="submit"]:hover,
 #report-person-form button[type="submit"]:hover,
 #report-pet-form button[type="submit"]:hover,
 #edit-person-form button[type="submit"]:hover,
@@ -852,7 +921,7 @@ div.at-chatfloat {
   cursor: pointer;
   padding: 0;
 }
-
+/** imagenes single **/
 .gallery-image {
   max-width: 100px;
   margin: 5px;
@@ -880,4 +949,15 @@ div.at-chatfloat {
 .container_single_humanitarios .btn-success .fa-whatsapp,
 .container_single_humanitarios .btn-success .fa-phone-alt {
   font-size: 15px;
+}
+
+.current-images {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+}
+.current-images img {
+  border: 1px solid #e3e3e3;
+  border-radius: 5px;
 }

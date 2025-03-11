@@ -34,7 +34,7 @@ $fotos_encontrado = get_post_meta($post_id, 'humanitarios_galeria', true);
         <!-- Campos específicos para Persona -->
         <div id="persona_fields" class="tipo_fields" style="display: <?php echo ($meta['tipo_encontrado'][0] ?? '') === 'persona' ? 'block' : 'none'; ?>;">
             <label for="nombre_persona">Nombre de la persona</label>
-            <input type="text" name="nombre_persona" value="<?php echo esc_attr($meta['nombre_persona'][0] ?? ''); ?>" placeholder="Nombre completo">
+            <input type="text" name="nombre_persona" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Nombre completo">
 
             <label for="edad_persona">Edad aproximada</label>
             <input type="number" name="edad_persona" value="<?php echo esc_attr($meta['edad_persona'][0] ?? ''); ?>" placeholder="Edad">
@@ -100,7 +100,7 @@ $fotos_encontrado = get_post_meta($post_id, 'humanitarios_galeria', true);
                 foreach ($gallery_images as $image_id) :
                     $image_url = wp_get_attachment_url($image_id); ?>
                     <div class="image-item">
-                        <img src="<?php echo esc_url($image_url); ?>" height="100">
+                        <img src="<?php echo esc_url($image_url); ?>" width="200">
                         <label>
                             <input type="checkbox" name="remove_images[]" value="<?php echo $image_id; ?>">
                             Eliminar

@@ -56,7 +56,7 @@ if ( !is_array($fotos_persona) || empty($fotos_persona) ) {
                 // Mostrar la imagen destacada
                 if ($featured_image_url) : ?>
                     <div class="image-item">
-                        <img src="<?php echo esc_url($featured_image_url); ?>" alt="Imagen destacada" height="100">
+                        <img src="<?php echo esc_url($featured_image_url); ?>" alt="Imagen destacada" width="300">
                         <label>
                             <input type="checkbox" name="remove_images[]" value="<?php echo esc_attr($featured_image_id); ?>">
                             Eliminar imagen destacada
@@ -69,7 +69,7 @@ if ( !is_array($fotos_persona) || empty($fotos_persona) ) {
                     $image_url = wp_get_attachment_url($image_id);
                     if ($image_url) : ?>
                         <div class="image-item">
-                            <img src="<?php echo esc_url($image_url); ?>" alt="Imagen de galería" height="100">
+                            <img src="<?php echo esc_url($image_url); ?>" alt="Imagen de galería" width="200">
                             <label>
                                 <input type="checkbox" name="remove_images[]" value="<?php echo esc_attr($image_id); ?>">
                                 Eliminar

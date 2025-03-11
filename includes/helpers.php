@@ -417,12 +417,6 @@ if (!function_exists('humanitarios_get_custom_fields')) {
                     'required' => true
                 ],
                 // Campos para personas encontradas
-                'nombre_persona' => [
-                    'label' => 'Nombre de la persona',
-                    'type' => 'text',
-                    'sanitize' => 'sanitize_text_field',
-                    'required' => false
-                ],
                 'edad_persona' => [
                     'label' => 'Edad aproximada',
                     'type' => 'number',

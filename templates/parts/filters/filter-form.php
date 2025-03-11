@@ -16,6 +16,9 @@
                     <option value="mascotas_perdidas" <?php selected($_GET['post_type'] ?? '', 'mascotas_perdidas'); ?>>
                         <?php _e('Mascotas', 'humanitarios-cpt'); ?>
                     </option>
+                    <option value="lost_objects" <?php selected($_GET['post_type'] ?? '', 'lost_objects'); ?>>
+                        <?php _e('Objetos Perdidos', 'humanitarios-cpt'); ?>
+                    </option>
                 </select>
             </div>
             <div class="filtro-group">
@@ -63,7 +66,6 @@
             </div>
 
             <div class="filtro-group mascota-fields" style="display: <?php echo ($_GET['post_type'] ?? '') === 'mascotas_perdidas' ? 'block' : 'none'; ?>">
-
                 <div class="subbloque-2">
                     <div class="filtro-subgroup">
                         <label><?php _e('Tipo de animal:', 'humanitarios-cpt'); ?></label>
@@ -97,10 +99,28 @@
                         </select>
                     </div>
                 </div>
-                
+            </div>
+
+            <div class="filtro-group objeto-fields" style="display: <?php echo ($_GET['post_type'] ?? '') === 'lost_objects' ? 'block' : 'none'; ?>">
+                <div class="subbloque-3">
+                    <div class="filtro-subgroup">
+                        <label><?php _e('Estado:', 'humanitarios-cpt'); ?></label>
+                        <select name="estado_objeto">
+                            <option value=""><?php _e('Todos', 'humanitarios-cpt'); ?></option>
+                            <option value="Nuevo" <?php selected($_GET['estado_objeto'] ?? '', 'Nuevo'); ?>>
+                                <?php _e('Nuevo', 'humanitarios-cpt'); ?>
+                            </option>
+                            <option value="Usado" <?php selected($_GET['estado_objeto'] ?? '', 'Usado'); ?>>
+                                <?php _e('Usado', 'humanitarios-cpt'); ?>
+                            </option>
+                            <option value="Dañado" <?php selected($_GET['estado_objeto'] ?? '', 'Dañado'); ?>>
+                                <?php _e('Dañado', 'humanitarios-cpt'); ?>
+                            </option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <button type="submit"><?php _e('Buscar', 'humanitarios-cpt'); ?></button>
         <button type="button" class="reset-filtros"><?php _e('Limpiar Filtros', 'humanitarios-cpt'); ?></button>
@@ -109,29 +129,31 @@
     <div class="humanitarios-posts-grid"></div>
     <div class="load-more-container"></div>
 </div>
-
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('humanitarios-filtro-form');
     const resultadosContainer = document.querySelector('.humanitarios-posts-grid');
     const loadMoreContainer = document.querySelector('.load-more-container');
     let currentPage = 1;
     let isLoading = false;
 
-    // Configuración AJAX
     const ajaxConfig = {
         url: '<?php echo admin_url('admin-ajax.php'); ?>',
         nonce: '<?php echo wp_create_nonce('humanitarios_filter_nonce'); ?>'
     };
 
+    // Función para actualizar la visibilidad de los campos según el tipo de búsqueda
     function actualizarCampos() {
         const tipo = document.getElementById('filtro-post-type').value;
         document.querySelector('.persona-fields').style.display = 
             tipo === 'personas_perdidas' ? 'block' : 'none';
         document.querySelector('.mascota-fields').style.display = 
             tipo === 'mascotas_perdidas' ? 'block' : 'none';
+        document.querySelector('.objeto-fields').style.display = 
+            tipo === 'lost_objects' ? 'block' : 'none';
     }
 
+    // Función para cargar resultados mediante AJAX
     function cargarResultados(page = 1, append = false) {
         if (isLoading) return;
         
@@ -151,25 +173,24 @@ document.addEventListener("DOMContentLoaded", function() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.text())
-        .then(html => {
-            // Crear un contenedor temporal para procesar la respuesta
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.data);
+            }
 
-            // Extraer el botón "Cargar más" (si existe)
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data.data;
+
             const newLoadMore = tempDiv.querySelector('.load-more');
             if (newLoadMore) {
-                // Añadir el listener para el botón
                 newLoadMore.addEventListener('click', function() {
                     newLoadMore.disabled = true;
                     cargarResultados(currentPage + 1, true);
                 });
-                // Remover el botón del HTML de posts
                 newLoadMore.remove();
             }
 
-            // El resto del contenido serán los posts
             const postsHTML = tempDiv.innerHTML;
 
             if (append) {
@@ -178,13 +199,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 resultadosContainer.innerHTML = postsHTML;
             }
             
-            // Actualizar el contenedor del botón
             loadMoreContainer.innerHTML = '';
             if (newLoadMore) {
                 loadMoreContainer.appendChild(newLoadMore);
             }
         })
         .catch(error => {
+            console.error('Error:', error);
             resultadosContainer.innerHTML = '<div class="error"><?php _e("Error al cargar resultados", "humanitarios-cpt"); ?></div>';
         })
         .finally(() => {
@@ -192,22 +213,22 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Evento change para actualizar campos dinámicos
     document.getElementById('filtro-post-type').addEventListener('change', actualizarCampos);
     
+    // Evento submit del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         cargarResultados(1);
     });
 
-    form.addEventListener('input', function() {
-        cargarResultados(1);
-    });
-
+    // Evento click para resetear filtros
     document.querySelector('.reset-filtros').addEventListener('click', function() {
         form.reset();
         cargarResultados(1);
     });
 
+    // Inicializar campos y cargar resultados al cargar la página
     actualizarCampos();
     cargarResultados(1);
 });

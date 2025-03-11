@@ -2,32 +2,37 @@
 defined('ABSPATH') || exit;
 
 /**
- * Registra los metaboxes
+ * Registra los metaboxes para todos los CPTs
  */
 function humanitarios_add_meta_boxes() {
+    $cpts = ['personas_perdidas', 'mascotas_perdidas', 'lost_objects', 'found-form'];
+    
+    // Metabox de Información Principal
     add_meta_box(
         'humanitarios_info_meta_box',
         'Información Detallada',
         'humanitarios_info_meta_box_callback',
-        ['personas_perdidas', 'mascotas_perdidas'],
+        $cpts,
         'normal',
         'high'
     );
 
+    // Metabox de Galería
     add_meta_box(
         'humanitarios_galeria_meta_box',
         'Galería de Imágenes',
         'humanitarios_galeria_meta_box_callback',
-        ['personas_perdidas', 'mascotas_perdidas'],
+        $cpts,
         'normal',
         'high'
     );
 
+    // Metabox de Estado
     add_meta_box(
         'humanitarios_status_meta_box',
         'Estado del Reporte',
         'humanitarios_status_meta_box_callback',
-        ['personas_perdidas', 'mascotas_perdidas'],
+        $cpts,
         'side',
         'high'
     );
@@ -39,79 +44,51 @@ add_action('add_meta_boxes', 'humanitarios_add_meta_boxes');
  */
 function humanitarios_info_meta_box_callback($post) {
     wp_nonce_field('humanitarios_save_meta_box', 'humanitarios_meta_box_nonce');
-    
-    // Obtener los campos personalizados desde el helper
     $fields = humanitarios_get_custom_fields($post->post_type);
     
-    echo '<div class="humanitarios-metabox-grid">';
+    echo '<div class="humanitarios-metabox-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">';
+    
     foreach ($fields as $key => $config) {
+        // Saltar campos de tipo file que se manejan en la galería
+        if ($config['type'] === 'file') continue;
+        
         $current_value = get_post_meta($post->ID, $key, true);
         echo '<div class="humanitarios-metabox-field">';
-        echo '<label for="'. esc_attr($key) .'">'. esc_html($config['label']) .'</label>';
         
-        $attributes = '';
-        if (!empty($config['required'])) {
-            $attributes .= ' required';
-        }
-        if (!empty($config['placeholder'])) {
-            $attributes .= ' placeholder="'. esc_attr($config['placeholder']) .'"';
-        }
-
-        switch ($config['type']) {
-            case 'textarea':
-                echo '<textarea id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                      class="widefat"'. $attributes .'>'. esc_textarea($current_value) .'</textarea>';
-                break;
-                
+        // Etiqueta
+        echo '<label for="'. esc_attr($key) .'" style="display: block; margin-bottom: 5px; font-weight: 600;">'. esc_html($config['label'] ?? $key) .'</label>';
+        
+        // Campos según tipo
+        switch ($config['type'] ?? 'text') {
             case 'select':
-                echo '<select id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       class="widefat"'. $attributes .'>';
-                if (!empty($config['placeholder'])) {
-                    echo '<option value="">'. esc_html($config['placeholder']) .'</option>';
-                }
+                echo '<select name="'. esc_attr($key) .'" id="'. esc_attr($key) .'" style="width: 100%; padding: 5px;">';
                 foreach ($config['options'] as $value => $label) {
                     echo '<option value="'. esc_attr($value) .'" '. selected($current_value, $value, false) .'>'. esc_html($label) .'</option>';
                 }
                 echo '</select>';
                 break;
                 
+            case 'textarea':
+                echo '<textarea name="'. esc_attr($key) .'" id="'. esc_attr($key) .'" style="width: 100%; height: 100px;">'. esc_textarea($current_value) .'</textarea>';
+                break;
+                
             case 'date':
-                echo '<input type="date" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
-                break;
-                
-            case 'time':
-                echo '<input type="time" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
-                break;
-                
-            case 'email':
-                echo '<input type="email" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                echo '<input type="date" name="'. esc_attr($key) .'" value="'. esc_attr($current_value) .'" style="width: 100%;">';
                 break;
                 
             case 'number':
-                echo '<input type="number" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="small-text"
-                       min="'. ($config['min'] ?? '') .'" max="'. ($config['max'] ?? '') .'"'. $attributes .'>';
-                break;
-                
-            case 'tel':
-                echo '<input type="tel" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
+                echo '<input type="number" name="'. esc_attr($key) .'" value="'. esc_attr($current_value) .'" 
+                      min="'. ($config['min'] ?? '') .'" max="'. ($config['max'] ?? '') .'" style="width: 100%;">';
                 break;
                 
             default:
-                echo '<input type="text" id="'. esc_attr($key) .'" name="'. esc_attr($key) .'" 
-                       value="'. esc_attr($current_value) .'" class="widefat"'. $attributes .'>';
-        }
-        
-        if (!empty($config['description'])) {
-            echo '<p class="description">'. esc_html($config['description']) .'</p>';
+                echo '<input type="text" name="'. esc_attr($key) .'" id="'. esc_attr($key) .'" 
+                       value="'. esc_attr($current_value) .'" style="width: 100%;">';
         }
         
         echo '</div>';
     }
+    
     echo '</div>';
 }
 
@@ -123,18 +100,16 @@ function humanitarios_galeria_meta_box_callback($post) {
     $gallery = get_post_meta($post->ID, 'humanitarios_galeria', true);
     ?>
     <div class="humanitarios-gallery-wrapper">
-        <ul class="humanitarios-gallery-grid">
-            <?php if ($gallery) : foreach ($gallery as $image_id) : 
-                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
-                ?>
-                <li class="humanitarios-gallery-item">
-                    <img src="<?php echo esc_url($image_url); ?>" alt="">
+        <ul class="humanitarios-gallery-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; list-style: none; padding: 0;">
+            <?php if ($gallery) : foreach ($gallery as $image_id) : ?>
+                <li style="position: relative;">
+                    <?php echo wp_get_attachment_image($image_id, 'thumbnail'); ?>
                     <input type="hidden" name="humanitarios_galeria[]" value="<?php echo absint($image_id); ?>">
-                    <button type="button" class="humanitarios-remove-image">&times;</button>
+                    <button type="button" class=" humanitarios-remove-image" >×</button>
                 </li>
             <?php endforeach; endif; ?>
         </ul>
-        <button type="button" class="button humanitarios-add-images">Agregar Imágenes</button>
+        <button type="button" class="button humanitarios-add-images" style="margin-top: 15px;">Agregar Imágenes</button>
     </div>
     <?php
 }
@@ -166,33 +141,43 @@ function humanitarios_status_meta_box_callback($post) {
  * Guarda los datos de los metaboxes
  */
 function humanitarios_save_meta_box($post_id) {
-    // Verificar nonce principal
-    if (!isset($_POST['humanitarios_meta_box_nonce']) || 
-        !wp_verify_nonce($_POST['humanitarios_meta_box_nonce'], 'humanitarios_save_meta_box')) {
+    // Verificar nonce primero
+    if (!isset($_POST['humanitarios_meta_box_nonce'])) {
         return;
     }
     
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    if (!current_user_can('edit_post', $post_id)) return;
+    // Validar nonce
+    if (!wp_verify_nonce($_POST['humanitarios_meta_box_nonce'], 'humanitarios_save_meta_box')) {
+        return;
+    }
+    
+    // Evitar guardado durante autoguardado
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Verificar permisos de usuario
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
 
-    // Guardar campos principales
+    // Guardar campos personalizados
     $fields = humanitarios_get_custom_fields(get_post_type($post_id));
     foreach ($fields as $key => $config) {
         if (isset($_POST[$key])) {
+            // Sanitizar según configuración del campo
             $sanitized_value = call_user_func(
-                $config['sanitize'] ?? 'sanitize_text_field', 
+                $config['sanitize'] ?? 'sanitize_text_field',
                 $_POST[$key]
             );
             update_post_meta($post_id, $key, $sanitized_value);
         }
     }
 
-    // Guardar galería
-    if (isset($_POST['humanitarios_galeria']) && wp_verify_nonce($_POST['humanitarios_gallery_nonce'], 'humanitarios_save_gallery')) {
+    // Guardar galería de imágenes
+    if (isset($_POST['humanitarios_galeria'])) {
         $gallery = array_map('absint', $_POST['humanitarios_galeria']);
         update_post_meta($post_id, 'humanitarios_galeria', $gallery);
-    } else {
-        delete_post_meta($post_id, 'humanitarios_galeria');
     }
 }
 add_action('save_post', 'humanitarios_save_meta_box');

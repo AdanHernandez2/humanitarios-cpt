@@ -142,6 +142,15 @@ function humanitarios_filtro_shortcode() {
  }
  add_shortcode('filtro_publicaciones', 'humanitarios_filtro_shortcode');
  
+ /**
+ *  Filtro de busqueda econtrados
+ */
+ function humanitarios_filtro_encontrados_shortcode() {
+    ob_start();
+    include plugin_dir_path(__FILE__) . '../templates/parts/filters/filter-found-post.php';
+    return ob_get_clean();
+}
+add_shortcode('filtro_encontrados', 'humanitarios_filtro_encontrados_shortcode');
 
  /**
  *  Shortcode para mostrar las publicaciones del usuario logueado con paginación

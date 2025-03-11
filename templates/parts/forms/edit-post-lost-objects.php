@@ -106,7 +106,7 @@ $featured_image = get_the_post_thumbnail_url($post_id, 'large');
             <div class="current-images">
                 <?php if ($featured_image) : ?>
                     <div class="image-item">
-                        <img src="<?php echo esc_url($featured_image); ?>" height="100">
+                        <img src="<?php echo esc_url($featured_image); ?>" width="300">
                         <label>
                             <input type="checkbox" name="remove_featured_image" value="1">
                             Eliminar imagen destacada
@@ -118,7 +118,7 @@ $featured_image = get_the_post_thumbnail_url($post_id, 'large');
                     foreach ($fotos_objeto as $image_id) :
                         $image_url = wp_get_attachment_url($image_id); ?>
                         <div class="image-item">
-                            <img src="<?php echo esc_url($image_url); ?>" height="100">
+                            <img src="<?php echo esc_url($image_url); ?>" width="200">
                             <label>
                                 <input type="checkbox" name="remove_images[]" value="<?php echo $image_id; ?>">
                                 Eliminar
