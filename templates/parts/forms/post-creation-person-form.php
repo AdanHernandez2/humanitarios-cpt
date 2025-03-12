@@ -22,7 +22,7 @@ if (!is_user_logged_in()) {
         <!-- Contenedor para previsualizar las imágenes -->
         <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
         <label for="edad">Edad aproximada</label>
-        <input type="number" name="edad" placeholder="Edad aproximada" required>
+        <input type="number" name="edad" placeholder="Edad aproximada" required min="0">
         <label for="nacionalidad">Nacionalidad</label>
         <input type="text" name="nacionalidad" placeholder="Nacionalidad (opcional)">
         <label for="genero">Genero</label>
@@ -42,15 +42,25 @@ if (!is_user_logged_in()) {
         <input type="text" name="cabello" placeholder="Color y tipo de cabello (opcional)">
         <label for="altura">Altura aproximada</label>
         <select name="altura">
-            <option value="1.45-1.50">1,45 - 1,50 m</option>
-            <option value="1.50-1.55">1,50 - 1,55 m</option>
-            <option value="1.55-1.60">1,55 - 1,60 m</option>
-            <option value="1.60-1.65">1,60 - 1,65 m</option>
-            <option value="1.65-1.70">1,65 - 1,70 m</option>
-            <option value="1.70-1.75">1,70 - 1,75 m</option>
-            <option value="1.75-1.80">1,75 - 1,80 m</option>
-            <option value="1.80-1.85">1,80 - 1,85 m</option>
-            <option value="1.85+">1,85 m o más</option>
+        <option value="0.50-0.60">0,50 - 0,60 m</option>
+        <option value="0.60-0.70">0,60 - 0,70 m</option>
+        <option value="0.70-0.80">0,70 - 0,80 m</option>
+        <option value="0.80-0.90">0,80 - 0,90 m</option>
+        <option value="0.90-1.00">0,90 - 1,00 m</option>
+        <option value="1.00-1.10">1,00 - 1,10 m</option>
+        <option value="1.10-1.20">1,10 - 1,20 m</option>
+        <option value="1.20-1.30">1,20 - 1,30 m</option>
+        <option value="1.30-1.40">1,30 - 1,40 m</option>
+        <option value="1.40-1.45">1,40 - 1,45 m</option>
+        <option value="1.45-1.50">1,45 - 1,50 m</option>
+        <option value="1.50-1.55">1,50 - 1,55 m</option>
+        <option value="1.55-1.60">1,55 - 1,60 m</option>
+        <option value="1.60-1.65">1,60 - 1,65 m</option>
+        <option value="1.65-1.70">1,65 - 1,70 m</option>
+        <option value="1.70-1.75">1,70 - 1,75 m</option>
+        <option value="1.75-1.80">1,75 - 1,80 m</option>
+        <option value="1.80-1.85">1,80 - 1,85 m</option>
+        <option value="1.85+">1,85 m o más</option>
         </select>
     </fieldset>
 

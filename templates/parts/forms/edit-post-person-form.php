@@ -33,7 +33,7 @@ if ( !is_array($fotos_persona) || empty($fotos_persona) ) {
             <label for="nombre_completo">Nombre completo</label>
             <input type="text" name="nombre_completo" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Nombre completo o apodo">
             <label for="edad">Edad aproximada</label>
-            <input type="number" name="edad" value="<?php echo esc_attr($meta['edad'][0] ?? ''); ?>" required>
+            <input type="number" name="edad" value="<?php echo esc_attr($meta['edad'][0] ?? ''); ?>" required min="0">
             <label for="nacionalidad">Nacionalidad</label>
             <input type="text" name="nacionalidad" value="<?php echo esc_attr($meta['nacionalidad'][0] ?? ''); ?>" placeholder="Nacionalidad">
             <label for="genero">Género</label>
@@ -95,6 +95,16 @@ if ( !is_array($fotos_persona) || empty($fotos_persona) ) {
             <input type="text" name="cabello" value="<?php echo esc_attr($meta['cabello'][0] ?? ''); ?>" placeholder="Color y tipo de cabello">
             <label for="altura">Altura aproximada</label>
             <select name="altura">
+                <option value="0.50-0.60" <?php selected($meta['altura'][0] ?? '', '0.50-0.60'); ?>>0,50 - 0,60 m</option>
+                <option value="0.60-0.70" <?php selected($meta['altura'][0] ?? '', '0.60-0.70'); ?>>0,60 - 0,70 m</option>
+                <option value="0.70-0.80" <?php selected($meta['altura'][0] ?? '', '0.70-0.80'); ?>>0,70 - 0,80 m</option>
+                <option value="0.80-0.90" <?php selected($meta['altura'][0] ?? '', '0.80-0.90'); ?>>0,80 - 0,90 m</option>
+                <option value="0.90-1.00" <?php selected($meta['altura'][0] ?? '', '0.90-1.00'); ?>>0,90 - 1,00 m</option>
+                <option value="1.00-1.10" <?php selected($meta['altura'][0] ?? '', '1.00-1.10'); ?>>1,00 - 1,10 m</option>
+                <option value="1.10-1.20" <?php selected($meta['altura'][0] ?? '', '1.10-1.20'); ?>>1,10 - 1,20 m</option>
+                <option value="1.20-1.30" <?php selected($meta['altura'][0] ?? '', '1.20-1.30'); ?>>1,20 - 1,30 m</option>
+                <option value="1.30-1.40" <?php selected($meta['altura'][0] ?? '', '1.30-1.40'); ?>>1,30 - 1,40 m</option>
+                <option value="1.40-1.45" <?php selected($meta['altura'][0] ?? '', '1.40-1.45'); ?>>1,40 - 1,45 m</option>
                 <option value="1.45-1.50" <?php selected($meta['altura'][0] ?? '', '1.45-1.50'); ?>>1,45 - 1,50 m</option>
                 <option value="1.50-1.55" <?php selected($meta['altura'][0] ?? '', '1.50-1.55'); ?>>1,50 - 1,55 m</option>
                 <option value="1.55-1.60" <?php selected($meta['altura'][0] ?? '', '1.55-1.60'); ?>>1,55 - 1,60 m</option>
