@@ -22,7 +22,24 @@ if (!is_user_logged_in()) {
         <!-- Contenedor para previsualizar las imágenes -->
         <div id="image-preview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
         <label for="edad">Edad aproximada</label>
-        <input type="number" name="edad" placeholder="Edad aproximada" required min="0">
+        <select name="edad" id="edad" required>
+            <option value="" disabled selected>Seleccione un rango de edad</option>
+            <option value="0-5">0 - 5 años</option>
+            <option value="6-10">6 - 10 años</option>
+            <option value="11-15">11 - 15 años</option>
+            <option value="16-20">16 - 20 años</option>
+            <option value="21-25">21 - 25 años</option>
+            <option value="26-30">26 - 30 años</option>
+            <option value="31-35">31 - 35 años</option>
+            <option value="36-40">36 - 40 años</option>
+            <option value="41-45">41 - 45 años</option>
+            <option value="46-50">46 - 50 años</option>
+            <option value="51-55">51 - 55 años</option>
+            <option value="56-60">56 - 60 años</option>
+            <option value="61-65">61 - 65 años</option>
+            <option value="66-70">66 - 70 años</option>
+            <option value="71+">71 años o más</option>
+        </select>
         <label for="nacionalidad">Nacionalidad</label>
         <input type="text" name="nacionalidad" placeholder="Nacionalidad (opcional)">
         <label for="genero">Genero</label>

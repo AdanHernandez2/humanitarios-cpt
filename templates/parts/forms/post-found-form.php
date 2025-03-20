@@ -29,7 +29,24 @@ if (!is_user_logged_in()) {
             <input type="text" name="nombre_persona" placeholder="Nombre completo">
 
             <label for="edad_persona">Edad aproximada</label>
-            <input type="number" name="edad_persona" placeholder="Edad">
+            <select name="edad_persona" id="edad_persona" required>
+                <option value="" disabled selected>Seleccione un rango de edad</option>
+                <option value="0-5">0 - 5 años</option>
+                <option value="6-10">6 - 10 años</option>
+                <option value="11-15">11 - 15 años</option>
+                <option value="16-20">16 - 20 años</option>
+                <option value="21-25">21 - 25 años</option>
+                <option value="26-30">26 - 30 años</option>
+                <option value="31-35">31 - 35 años</option>
+                <option value="36-40">36 - 40 años</option>
+                <option value="41-45">41 - 45 años</option>
+                <option value="46-50">46 - 50 años</option>
+                <option value="51-55">51 - 55 años</option>
+                <option value="56-60">56 - 60 años</option>
+                <option value="61-65">61 - 65 años</option>
+                <option value="66-70">66 - 70 años</option>
+                <option value="71+">71 años o más</option>
+            </select>
 
             <label for="genero_persona">Género</label>
             <select name="genero_persona">

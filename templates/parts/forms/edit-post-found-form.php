@@ -37,7 +37,24 @@ $fotos_encontrado = get_post_meta($post_id, 'humanitarios_galeria', true);
             <input type="text" name="nombre_persona" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Nombre completo">
 
             <label for="edad_persona">Edad aproximada</label>
-            <input type="number" name="edad_persona" value="<?php echo esc_attr($meta['edad_persona'][0] ?? ''); ?>" placeholder="Edad">
+            <select name="edad_persona" id="edad_persona" required>
+                <option value="" disabled <?php echo empty($meta['edad_persona'][0]) ? 'selected' : ''; ?>>Seleccione un rango de edad</option>
+                <option value="0-5" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '0-5' ? 'selected' : ''; ?>>0 - 5 años</option>
+                <option value="6-10" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '6-10' ? 'selected' : ''; ?>>6 - 10 años</option>
+                <option value="11-15" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '11-15' ? 'selected' : ''; ?>>11 - 15 años</option>
+                <option value="16-20" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '16-20' ? 'selected' : ''; ?>>16 - 20 años</option>
+                <option value="21-25" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '21-25' ? 'selected' : ''; ?>>21 - 25 años</option>
+                <option value="26-30" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '26-30' ? 'selected' : ''; ?>>26 - 30 años</option>
+                <option value="31-35" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '31-35' ? 'selected' : ''; ?>>31 - 35 años</option>
+                <option value="36-40" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '36-40' ? 'selected' : ''; ?>>36 - 40 años</option>
+                <option value="41-45" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '41-45' ? 'selected' : ''; ?>>41 - 45 años</option>
+                <option value="46-50" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '46-50' ? 'selected' : ''; ?>>46 - 50 años</option>
+                <option value="51-55" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '51-55' ? 'selected' : ''; ?>>51 - 55 años</option>
+                <option value="56-60" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '56-60' ? 'selected' : ''; ?>>56 - 60 años</option>
+                <option value="61-65" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '61-65' ? 'selected' : ''; ?>>61 - 65 años</option>
+                <option value="66-70" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '66-70' ? 'selected' : ''; ?>>66 - 70 años</option>
+                <option value="71+" <?php echo esc_attr($meta['edad_persona'][0] ?? '') === '71+' ? 'selected' : ''; ?>>71 años o más</option>
+            </select>
 
             <label for="genero_persona">Género</label>
             <select name="genero_persona">

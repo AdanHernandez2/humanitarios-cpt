@@ -20,11 +20,26 @@ if (!function_exists('humanitarios_get_custom_fields')) {
                 ],
                 'edad' => [
                     'label' => 'Edad',
-                    'type' => 'number',
-                    'sanitize' => 'absint',
-                    'description' => 'Edad en años',
-                    'min' => 0,
-                    'max' => 120
+                    'type' => 'select',
+                    'sanitize' => 'sanitize_text_field',
+                    'description' => 'Seleccione un rango de edad',
+                    'options' => [
+                        '0-5' => '0 - 5 años',
+                        '6-10' => '6 - 10 años',
+                        '11-15' => '11 - 15 años',
+                        '16-20' => '16 - 20 años',
+                        '21-25' => '21 - 25 años',
+                        '26-30' => '26 - 30 años',
+                        '31-35' => '31 - 35 años',
+                        '36-40' => '36 - 40 años',
+                        '41-45' => '41 - 45 años',
+                        '46-50' => '46 - 50 años',
+                        '51-55' => '51 - 55 años',
+                        '56-60' => '56 - 60 años',
+                        '61-65' => '61 - 65 años',
+                        '66-70' => '66 - 70 años',
+                        '71+'  => '71 años o más'
+                    ]
                 ],
                 'nacionalidad' => [
                     'label' => 'Nacionalidad',
@@ -419,9 +434,26 @@ if (!function_exists('humanitarios_get_custom_fields')) {
                 // Campos para personas encontradas
                 'edad_persona' => [
                     'label' => 'Edad aproximada',
-                    'type' => 'number',
-                    'sanitize' => 'absint',
-                    'required' => false
+                    'type' => 'select',
+                    'sanitize' => 'sanitize_text_field',
+                    'required' => false,
+                    'options' => [
+                        '0-5' => '0 - 5 años',
+                        '6-10' => '6 - 10 años',
+                        '11-15' => '11 - 15 años',
+                        '16-20' => '16 - 20 años',
+                        '21-25' => '21 - 25 años',
+                        '26-30' => '26 - 30 años',
+                        '31-35' => '31 - 35 años',
+                        '36-40' => '36 - 40 años',
+                        '41-45' => '41 - 45 años',
+                        '46-50' => '46 - 50 años',
+                        '51-55' => '51 - 55 años',
+                        '56-60' => '56 - 60 años',
+                        '61-65' => '61 - 65 años',
+                        '66-70' => '66 - 70 años',
+                        '71+'  => '71 años o más'
+                    ]
                 ],
                 'genero_persona' => [
                     'label' => 'Género',
