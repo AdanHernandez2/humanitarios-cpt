@@ -1,13 +1,14 @@
 <?php
 // form-handler.php
 
-function humanitarios_handle_file_upload($files, $post_id) {
+function humanitarios_handle_file_upload($files, $post_id)
+{
     require_once(ABSPATH . 'wp-admin/includes/image.php');
     require_once(ABSPATH . 'wp-admin/includes/file.php');
     require_once(ABSPATH . 'wp-admin/includes/media.php');
 
     $attachments = [];
-    
+
     foreach ($files['name'] as $key => $value) {
         if (!empty($files['name'][$key])) {
             $file = [
@@ -28,13 +29,14 @@ function humanitarios_handle_file_upload($files, $post_id) {
             }
         }
     }
-    
+
     return $attachments;
 }
 /**
  * Handler unificado para creación de reportes
  */
-function humanitarios_handle_submission($post_type, $nonce_action, $title_field) {
+function humanitarios_handle_submission($post_type, $nonce_action, $title_field)
+{
     try {
         // Verificación básica
         if (!wp_verify_nonce($_POST['humanitarios_nonce'], $nonce_action)) {
@@ -42,10 +44,10 @@ function humanitarios_handle_submission($post_type, $nonce_action, $title_field)
         }
 
         // Crear post
-        $post_title = isset($_POST[$title_field]) 
-            ? sanitize_text_field($_POST[$title_field]) 
-            : ($post_type === 'personas_perdidas' 
-                ? __('Anónimo', 'humanitarios') 
+        $post_title = isset($_POST[$title_field])
+            ? sanitize_text_field($_POST[$title_field])
+            : ($post_type === 'personas_perdidas'
+                ? __('Anónimo', 'humanitarios')
                 : __('Mascota sin nombre', 'humanitarios')
             );
 
@@ -85,7 +87,7 @@ function humanitarios_handle_submission($post_type, $nonce_action, $title_field)
             if (!empty($attachments)) {
                 update_post_meta($post_id, 'humanitarios_galeria', $attachments);
                 set_post_thumbnail($post_id, $attachments[0]);
-                
+
                 // Debugging
                 error_log('Imágenes subidas para ' . $post_type . ': ' . print_r($attachments, true));
             }
@@ -120,7 +122,6 @@ function humanitarios_handle_submission($post_type, $nonce_action, $title_field)
             'message' => esc_html__('Reporte enviado para revisión', 'humanitarios'),
             'post_id' => $post_id
         ];
-
     } catch (Exception $e) {
         error_log('Error en humanitarios_handle_submission: ' . $e->getMessage());
         return [
@@ -133,7 +134,7 @@ function humanitarios_handle_submission($post_type, $nonce_action, $title_field)
 /**
  * Handlers específicos para cada tipo
  */
-add_action('wp_ajax_submit_person_form', function() {
+add_action('wp_ajax_submit_person_form', function () {
     $response = humanitarios_handle_submission(
         'personas_perdidas',
         'submit_person_form',
@@ -142,7 +143,7 @@ add_action('wp_ajax_submit_person_form', function() {
     wp_send_json($response);
 });
 
-add_action('wp_ajax_submit_pet_form', function() {
+add_action('wp_ajax_submit_pet_form', function () {
     $response = humanitarios_handle_submission(
         'mascotas_perdidas',
         'submit_pet_form',
@@ -152,7 +153,7 @@ add_action('wp_ajax_submit_pet_form', function() {
 });
 
 // Handler para objetos perdidos
-add_action('wp_ajax_submit_lost_object_form', function() {
+add_action('wp_ajax_submit_lost_object_form', function () {
     $response = humanitarios_handle_submission(
         'lost_objects',
         'submit_lost_object_form',
@@ -162,7 +163,7 @@ add_action('wp_ajax_submit_lost_object_form', function() {
 });
 
 // Handler para objetos/personas/mascotas encontradas
-add_action('wp_ajax_submit_found_form', function() {
+add_action('wp_ajax_submit_found_form', function () {
     $response = humanitarios_handle_submission(
         'found-form',
         'submit_found_form',
@@ -175,7 +176,8 @@ add_action('wp_ajax_submit_found_form', function() {
  * Handler para edición de reportes (genérico)
  */
 add_action('wp_ajax_edit_report', 'handle_edit_report');
-function handle_edit_report() {
+function handle_edit_report()
+{
     try {
         // Validación básica
         if (!isset($_POST['post_id'])) {
@@ -301,7 +303,6 @@ function handle_edit_report() {
             'message' => 'Reporte actualizado correctamente',
             'redirect' => get_permalink($post_id)
         ]);
-
     } catch (Exception $e) {
         // Respuesta de error con mensaje descriptivo
         wp_send_json([
@@ -314,98 +315,119 @@ function handle_edit_report() {
 /**
  *  Maneja el envío del formulario de registro de usuarios.
  */
-function humanitarios_handle_registration_form() {
-    // Comprobar si se envió el formulario de registro
-    if ( isset( $_POST['humanitarios_register'] ) ) {
+function humanitarios_handle_registration_form()
+{
+    // Iniciar sesión si no está iniciada
+    if (!session_id()) {
+        session_start();
+    }
 
+    // Limpiar errores previos
+    unset($_SESSION['registration_errors']);
+    unset($_SESSION['registration_form_data']);
+
+    // Comprobar si se envió el formulario de registro
+    if (isset($_POST['humanitarios_register'])) {
         $errors = array();
+        $form_data = array();
 
         // Verificar el nonce de seguridad
-        if ( ! isset( $_POST['registration_nonce'] ) || ! wp_verify_nonce( $_POST['registration_nonce'], 'humanitarios_registration_nonce' ) ) {
-            $errors[] = __( 'La solicitud no es válida. Por favor, inténtalo de nuevo.', 'workreap' );
+        if (!isset($_POST['registration_nonce']) || !wp_verify_nonce($_POST['registration_nonce'], 'humanitarios_registration_nonce')) {
+            $errors[] = __('La solicitud no es válida. Por favor, inténtalo de nuevo.', 'workreap');
         }
 
         // Sanitizar y validar los campos recibidos
-        $first_name   = isset( $_POST['user_registration']['first_name'] ) ? sanitize_text_field( $_POST['user_registration']['first_name'] ) : '';
-        $last_name    = isset( $_POST['user_registration']['last_name'] ) ? sanitize_text_field( $_POST['user_registration']['last_name'] ) : '';
-        $email        = isset( $_POST['user_registration']['email'] ) ? sanitize_email( $_POST['user_registration']['email'] ) : '';
-        $password     = isset( $_POST['user_registration']['password'] ) ? $_POST['user_registration']['password'] : ''; // La contraseña se trata sin sanitizar para no afectar caracteres especiales
-        $tipo_usuario = isset( $_POST['user_registration']['tipo_usuario'] ) ? sanitize_text_field( $_POST['user_registration']['tipo_usuario'] ) : '';
-        $accept_terms = isset( $_POST['user_registration']['accept_terms'] ) ? $_POST['user_registration']['accept_terms'] : '';
+        $first_name = isset($_POST['user_registration']['first_name']) ? sanitize_text_field($_POST['user_registration']['first_name']) : '';
+        $last_name = isset($_POST['user_registration']['last_name']) ? sanitize_text_field($_POST['user_registration']['last_name']) : '';
+        $email = isset($_POST['user_registration']['email']) ? sanitize_email($_POST['user_registration']['email']) : '';
+        $password = isset($_POST['user_registration']['password']) ? $_POST['user_registration']['password'] : '';
+        $tipo_usuario = isset($_POST['user_registration']['tipo_usuario']) ? sanitize_text_field($_POST['user_registration']['tipo_usuario']) : '';
+        $accept_terms = isset($_POST['user_registration']['accept_terms']) ? $_POST['user_registration']['accept_terms'] : '';
 
-        if ( empty( $first_name ) ) {
-            $errors[] = __( 'El nombre es obligatorio.', 'workreap' );
+        // Guardar datos del formulario para repoblar
+        $form_data = array(
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'tipo_usuario' => $tipo_usuario,
+            'accept_terms' => $accept_terms
+        );
+
+        // Validaciones
+        if (empty($first_name)) {
+            $errors[] = __('El nombre es obligatorio.', 'workreap');
         }
-        if ( empty( $last_name ) ) {
-            $errors[] = __( 'El apellido es obligatorio.', 'workreap' );
+        if (empty($last_name)) {
+            $errors[] = __('El apellido es obligatorio.', 'workreap');
         }
-        if ( empty( $email ) || ! is_email( $email ) ) {
-            $errors[] = __( 'El correo es inválido.', 'workreap' );
-        } elseif ( email_exists( $email ) ) {
-            $errors[] = __( 'El correo ya está registrado.', 'workreap' );
+        if (empty($email) || !is_email($email)) {
+            $errors[] = __('El correo es inválido.', 'workreap');
+        } elseif (email_exists($email)) {
+            $errors[] = __('El correo ya está registrado.', 'workreap');
         }
-        if ( empty( $password ) || strlen( $password ) < 6 ) {
-            $errors[] = __( 'La contraseña debe tener al menos 6 caracteres.', 'workreap' );
+        if (empty($password) || strlen($password) < 6) {
+            $errors[] = __('La contraseña debe tener al menos 6 caracteres.', 'workreap');
         }
-        if ( empty( $tipo_usuario ) ) {
-            $errors[] = __( 'Debes seleccionar el tipo de usuario.', 'workreap' );
+        if (empty($tipo_usuario)) {
+            $errors[] = __('Debes seleccionar el tipo de usuario.', 'workreap');
         }
-        if ( empty( $accept_terms ) ) {
-            $errors[] = __( 'Debes aceptar los términos y condiciones.', 'workreap' );
+        if (empty($accept_terms)) {
+            $errors[] = __('Debes aceptar los términos y condiciones.', 'workreap');
         }
 
-        // Si existen errores, se guardan en un transient y se redirige a la misma página
-        if ( ! empty( $errors ) ) {
-            set_transient( 'registration_errors', $errors, 30 );
-            wp_redirect( wp_get_referer() );
-            exit;
+        // Si existen errores, guardar en sesión y terminar
+        if (!empty($errors)) {
+            $_SESSION['registration_errors'] = $errors;
+            $_SESSION['registration_form_data'] = $form_data;
+            return;
         }
 
-        // Configurar los datos para crear el usuario.
-        // Se usará el correo como user_login y el rol será siempre "subscriber"
+        // Configurar los datos para crear el usuario
         $userdata = array(
             'user_login' => $email,
             'user_email' => $email,
-            'user_pass'  => $password,
+            'user_pass' => $password,
             'first_name' => $first_name,
-            'last_name'  => $last_name,
-            'role'       => 'subscriber', // Rol por defecto
+            'last_name' => $last_name,
+            'role' => 'subscriber',
         );
 
         // Crear el usuario
-        $user_id = wp_insert_user( $userdata );
+        $user_id = wp_insert_user($userdata);
 
-        if ( is_wp_error( $user_id ) ) {
-            // Si ocurre algún error al crear el usuario, se guarda el mensaje de error
+        if (is_wp_error($user_id)) {
             $errors[] = $user_id->get_error_message();
-            set_transient( 'registration_errors', $errors, 30 );
-            wp_redirect( wp_get_referer() );
-            exit;
+            $_SESSION['registration_errors'] = $errors;
+            $_SESSION['registration_form_data'] = $form_data;
         } else {
-            // Guardar meta adicional:
-            // - Guardar el valor del formulario en "tipo_usuario"
-            // - Registrar el valor "employers" en "_user_type" por defecto
-            update_user_meta( $user_id, 'tipo_usuario', $tipo_usuario );
-            update_user_meta( $user_id, '_user_type', 'employers' );
+            // Guardar meta adicional
+            update_user_meta($user_id, 'tipo_usuario', $tipo_usuario);
+            update_user_meta($user_id, '_user_type', 'employers');
 
             // Iniciar sesión automáticamente al usuario
-            wp_set_current_user( $user_id );
-            wp_set_auth_cookie( $user_id );
+            wp_set_current_user($user_id);
+            wp_set_auth_cookie($user_id);
+
+            // Limpiar datos de sesión
+            unset($_SESSION['registration_errors']);
+            unset($_SESSION['registration_form_data']);
 
             // Redirigir al usuario al dashboard
-            wp_redirect( home_url( '/user-dashboard/' ) );
+            wp_redirect(home_url('/user-dashboard/'));
             exit;
         }
     }
 }
-add_action( 'init', 'humanitarios_handle_registration_form' );
+add_action('init', 'humanitarios_handle_registration_form');
 
 // Helpers adicionales
-function humanitarios_sanitize_array($data, $sanitizer = 'sanitize_text_field') {
+function humanitarios_sanitize_array($data, $sanitizer = 'sanitize_text_field')
+{
     return array_map($sanitizer, (array)$data);
 }
 
-function humanitarios_validate_required($fields, $required_fields) {
+function humanitarios_validate_required($fields, $required_fields)
+{
     foreach ($required_fields as $field) {
         if (empty($fields[$field])) {
             throw new Exception("El campo $field es requerido");
