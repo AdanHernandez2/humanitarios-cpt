@@ -1,11 +1,6 @@
 # Humanitarios CPT
 
-Humanitarios CPT es un plugin de WordPress diseñado para reportar personas y mascotas perdidas. Este plugin permite registrar, gestionar y mostrar anuncios de personas y mascotas desaparecidas, así como notificar a los usuarios sobre actualizaciones importantes.
-
-## Estructura del plugin
-
-![Estructura](https://res.cloudinary.com/www-scriptdan-xyz/image/upload/v1738542212/Img/koal8tn8aanpsfwftsmv.jpg)
-
+Humanitarios CPT es un plugin de WordPress diseñado para reportar personas, mascotas y objectos perdidos. Este plugin permite registrar, gestionar y mostrar anuncios de personas, mascotas y pertenencias desaparecidas, así como notificar a los usuarios sobre actualizaciones importantes.
 
 ## Instalación
 
