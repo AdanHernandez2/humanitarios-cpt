@@ -16,6 +16,24 @@ El plugin registra dos tipos de publicaciones personalizadas (CPTs):
 - **Personas Perdidas**: Permite reportar personas desaparecidas.
 - **Mascotas Perdidas**: Permite reportar mascotas desaparecidas.
 
+## Shortcodes disponibles
+
+| Shortcode | Descripción |
+|-----------|-------------|
+| `[person_creation_form]` | Formulario para reportar personas perdidas |
+| `[pet_creation_form]` | Formulario para reportar mascotas perdidas |
+| `[creation_lost_objects_form]` | Formulario para reportar objetos perdidos |
+| `[render_creation_found_form]` | Formulario para reportar objetos encontrados |
+| `[edit_post_person_form]` | Formulario para editar reportes de personas |
+| `[edit_post_pets_form]` | Formulario para editar reportes de mascotas |
+| `[edit_post_lost_objects]` | Formulario para editar reportes de objetos perdidos |
+| `[edit_post_found]` | Formulario para editar reportes de objetos encontrados |
+| `[mostrar_publicaciones]` | Muestra todas las publicaciones (sin paginación) |
+| `[filtro_publicaciones]` | Filtro de búsqueda para publicaciones |
+| `[filtro_encontrados]` | Filtro de búsqueda para publicaciones de encontrados |
+| `[mostrar_publicaciones_usuario]` | Muestra publicaciones del usuario logueado con paginación |
+| `[humanitarios_formulario_registro]` | Formulario de registro para nuevos usuarios |
+
 ### Formularios
 
 El plugin incluye formularios para la creación y edición de publicaciones de personas y mascotas perdidas, así como formularios de filtrado para buscar anuncios específicos.
